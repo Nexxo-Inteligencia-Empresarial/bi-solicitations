@@ -8,6 +8,10 @@ from src.infra.db.repositories.tickets_requests_repository import TicketsRequest
 use_case = GetTickets(TicketsRequestsRepository())
 labels, values = use_case.get()
 
+st.set_page_config(
+   page_title="BI Solicitations",
+   page_icon="🧊",
+)
 
 st.markdown("""
     <style>
@@ -25,7 +29,7 @@ st.markdown("""
         .block-container {
             padding-left: 10rem;
             padding-right: 10rem;
-            padding-top: 1rem;
+            padding-top: 0;
             padding-bottom: 1rem;
             margin: 0;
             max-width: 100%;
@@ -63,7 +67,7 @@ fig = go.Figure(data=[go.Pie(
 
 fig.update_layout(
     height=700,  # Aumenta a altura do gráfico
-    margin=dict(t=80, b=5, l=20, r=20),
+    margin=dict(t=100, b=5, l=20, r=20),
     legend=dict(
         font=dict(size=16)  # Tamanho maior da legenda
     )

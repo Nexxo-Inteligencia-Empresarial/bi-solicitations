@@ -11,5 +11,4 @@ class TicketsRequestsRepository(TicketsRequestsRepositoryInterface):
                 data = db_connection.session.query(TicketsRequestsModel.status, func.count(TicketsRequestsModel.id)).group_by(TicketsRequestsModel.status).all()
                 return data
         except Exception as exception:
-            db_connection.session.rollback()
             raise exception
