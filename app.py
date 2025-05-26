@@ -7,6 +7,13 @@ from src.infra.db.repositories.tickets_requests_repository import TicketsRequest
 
 use_case = GetTickets(TicketsRequestsRepository())
 labels, values = use_case.get()
+colors = ['#EE0000', '#3b7c59']
+for i in range(len(labels)):
+    if labels[i] == "Responder":
+        colors[i] = '#EE0000'
+    else:
+        colors[i] = '#3b7c59'
+
 
 st.set_page_config(
    page_title="BI Solicitations",
@@ -60,6 +67,7 @@ st.title("Solicitações")
 fig = go.Figure(data=[go.Pie(
     labels=labels,
     values=values,
+    marker_colors=colors,
     textinfo='label+value',
     textfont_size=18,
     insidetextorientation='auto'

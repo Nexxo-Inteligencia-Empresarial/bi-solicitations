@@ -1,4 +1,4 @@
-from sqlalchemy import Column, DateTime, Integer, String, UniqueConstraint
+from sqlalchemy import Column, Integer, String, UniqueConstraint
 from src.infra.db.settings.base import Base
 
 class TicketsRequests(Base):
@@ -15,6 +15,6 @@ class TicketsRequests(Base):
     departament = Column(String(100))
     status = Column(String(50))
     type = Column(String(50))
-    due_date = Column(DateTime, nullable=True)
-    system = Column(DateTime)
+    due_date = Column(String, nullable=True)
+    system = Column(String)
     

@@ -3,5 +3,5 @@ from abc import ABC, abstractmethod
 class TicketsRequestsRepositoryInterface(ABC):
 
     @abstractmethod
-    def get_tickets(self, create_date: str):
+    def get_tickets(self, today: str):
         pass
