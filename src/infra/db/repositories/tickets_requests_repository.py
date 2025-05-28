@@ -11,7 +11,6 @@ class TicketsRequestsRepository(TicketsRequestsRepositoryInterface):
                 data = db_connection.session.\
                     query(TicketsRequestsModel.status, func.count(TicketsRequestsModel.id)).\
                     filter(or_(
-                        TicketsRequestsModel.create_date == today,
                         and_(
                             TicketsRequestsModel.status != "Respondida",
                             TicketsRequestsModel.due_date <= today

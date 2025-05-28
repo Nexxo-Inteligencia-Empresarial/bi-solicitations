@@ -12,7 +12,6 @@ st.set_page_config(
     page_icon="🧊",
 )
 
-# Ocultar menus, cabeçalhos, rodapés
 st.markdown("""
     <style>
         #MainMenu, header, footer { visibility: hidden; }
@@ -30,11 +29,10 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Controla tempo de atualização
 if "last_update" not in st.session_state:
     st.session_state.last_update = time.time()
 if "refresh_interval" not in st.session_state:
-    st.session_state.refresh_interval = 3600  # 1 hora
+    st.session_state.refresh_interval = 3600
 
 st.title("Solicitações")
 
@@ -64,7 +62,6 @@ st.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
-# Atualiza após intervalo
 if time.time() - st.session_state.last_update > st.session_state.refresh_interval:
     st.session_state.last_update = time.time()
     st.experimental_rerun()
