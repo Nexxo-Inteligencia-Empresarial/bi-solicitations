@@ -8,8 +8,8 @@ from src.infra.db.repositories.tickets_requests_repository import TicketsRequest
 
 use_case = GetTickets(TicketsRequestsRepository())
 datas = use_case.get_by_departament()
- 
-st.set_page_config(layout="wide")
+
+st.set_page_config(layout="wide", page_title="BI Solicitations", page_icon="🧊",)
  
 st.markdown("<h1 style='text-align: center; margin-bottom: 30px'>Solicitações Acessórias/Onvio</h1>", unsafe_allow_html=True)
  
@@ -62,4 +62,8 @@ for i in range(0, len(datas_itens), 3):
             )
  
             st.altair_chart(chart, use_container_width=False)
-st.markdown("##")
+st.markdown("""
+    <div style="text-align: right; opacity: 0.6; font-size: 18px;">
+        <b>Hubnexxo</b> | Soluções Empresariais
+    </div>
+""", unsafe_allow_html=True)

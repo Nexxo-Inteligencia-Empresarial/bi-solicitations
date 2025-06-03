@@ -49,7 +49,7 @@ class TicketsRequestsRepository(TicketsRequestsRepositoryInterface):
                     group_by(func.lower(TicketsRequestsModel.departament),
                              TicketsRequestsModel.status).\
                     all()
-
+                
                 return data
         except Exception as exception:
             raise exception
