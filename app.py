@@ -1,3 +1,4 @@
+from streamlit_autorefresh import st_autorefresh
 import streamlit as st
 import plotly.graph_objects as go
 import time
@@ -11,6 +12,8 @@ st.set_page_config(
     page_title="BI Solicitations",
     page_icon="🧊",
 )
+
+count = st_autorefresh(interval=600000)
 
 st.markdown("""
     <style>

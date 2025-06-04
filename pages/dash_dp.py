@@ -1,3 +1,4 @@
+from streamlit_autorefresh import st_autorefresh
 import streamlit as st
 import pandas as pd
 import altair as alt
@@ -10,6 +11,8 @@ use_case = GetTickets(TicketsRequestsRepository())
 datas = use_case.get_by_departament()
 
 st.set_page_config(layout="wide", page_title="BI Solicitations", page_icon="🧊",)
+
+count = st_autorefresh(interval=600000)
  
 st.markdown("<h1 style='text-align: center; margin-bottom: 30px'>Solicitações Acessórias/Onvio</h1>", unsafe_allow_html=True)
  
