@@ -14,6 +14,7 @@ st.set_page_config(layout="wide", page_title="BI Solicitations", page_icon="🧊
 st.markdown("<h1 style='text-align: center; margin-bottom: 30px'>Solicitações Acessórias/Onvio</h1>", unsafe_allow_html=True)
  
 datas_itens = list(datas.items())
+datas_itens.sort(key=lambda item: sum(item[1].values()), reverse=True)
  
 for i in range(0, len(datas_itens), 3):
     row = datas_itens[i:i+3]
@@ -30,18 +31,20 @@ for i in range(0, len(datas_itens), 3):
             st.markdown(f"### {setor}")
             st.markdown(f"Total de solicitações: **{total}**")
  
+            max_val = df["Quantidade"].max()
+            limit = int(max_val * 1.1)
+
             base = alt.Chart(df).encode(
-                y=alt.Y("Status", title=None, ),
-                x=alt.X("Quantidade", title=None, axis=None),
- 
+                y=alt.Y("Status", title=None),
+                x=alt.X("Quantidade", title=None, axis=None, scale=alt.Scale(domain=[0, limit]))
             )
- 
-            bars = base.mark_bar(size=25, color="#1f77b4")
+            
+            bars = base.mark_bar(size=25, color="#1f77b4",)
  
             text = base.mark_text(
                 align="left",
                 baseline="middle",
-                dx=3,  
+                dx=1,  
                 color="black",
                 fontSize=13
             ).encode(
