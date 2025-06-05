@@ -34,9 +34,13 @@ class GetTickets:
         rows = self.tickets_requests_repository.get_tickets_departaments(today)
 
         datas = defaultdict(lambda: {"Resolvendo": 0, "Responder": 0})
-
+        
         for status, departament, count in rows:
             category = self.__classify_departaments(departament)
+            
+            if category is None:
+                continue
+
             datas[category][status] += count
 
         return dict(datas)
@@ -45,4 +49,4 @@ class GetTickets:
         for category, rules in categories.items():
             if departament in rules:
                 return category
-        return "Outros Departamentos"
+        return None
