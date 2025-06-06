@@ -66,7 +66,7 @@ def main():
                 )
 
                 bars = base.mark_bar(size=25).encode(
-                color=alt.Color('Status:N', scale=alt.Scale(domain=['Responder', 'Resolvendo'], range=['#EE0000', '#cfaf1f"']), legend=None)
+                color=alt.Color('Status:N', scale=alt.Scale(domain=['Responder', 'Resolvendo'], range=['#EE0000', '#cfaf1f']), legend=None)
                 )
 
                 text = base.mark_text(
