@@ -40,7 +40,7 @@ if "refresh_interval" not in st.session_state:
 st.title("Solicitações")
 
 labels, values = use_case.get()
-colors = ['#3b7c59' if label != "Responder" else '#EE0000' for label in labels]
+colors = ["#eec50c" if label != "Responder" else '#EE0000' for label in labels]
 
 fig = go.Figure(data=[go.Pie(
     labels=labels,
@@ -48,6 +48,7 @@ fig = go.Figure(data=[go.Pie(
     marker_colors=colors,
     textinfo='label+value',
     textfont_size=18,
+    textfont=dict(size=18, color='white'),
     insidetextorientation='auto'
 )])
 

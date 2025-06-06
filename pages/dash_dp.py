@@ -48,10 +48,10 @@ for i in range(0, len(datas_itens), 3):
             header_col1, header_col2 = st.columns([6, 1])
             with header_col1:
                 st.markdown(f"### {setor}")
-            with header_col2:
-                responder_qtd = values.get("Responder", 0)
-                img_path = get_status_image_path(responder_qtd)
-                st.image(img_path, width=30)
+            # with header_col2:
+            #     responder_qtd = values.get("Responder", 0)
+            #     img_path = get_status_image_path(responder_qtd)
+            #     st.image(img_path, width=30)
 
             st.markdown(f"Total de solicitações: **{total}**")
 
@@ -63,7 +63,9 @@ for i in range(0, len(datas_itens), 3):
                 x=alt.X("Quantidade", title=None, axis=None, scale=alt.Scale(domain=[0, limit]))
             )
 
-            bars = base.mark_bar(size=25, color="#1f77b4")
+            bars = base.mark_bar(size=25).encode(
+            color=alt.Color('Status:N', scale=alt.Scale(domain=['Responder', 'Resolvendo'], range=['#EE0000', '#eec50c']), legend=None)
+            )
 
             text = base.mark_text(
                 align="left",
