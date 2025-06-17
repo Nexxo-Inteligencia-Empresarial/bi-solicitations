@@ -53,6 +53,29 @@ class GetTickets:
 
         return dict(datas)
     
+    def get_tickets_dates(self):
+
+        data = self.tickets_requests_repository.get_tickets_dates()
+
+        status_totals = {"Dentro do SLA": 0, "Fora do SLA": 0}
+
+        for conclusion_date, create_date in data:
+
+            create_date = datetime.fromisoformat(create_date).date()
+            conclusion_date = datetime.fromisoformat(conclusion_date).date()
+
+            dias = (conclusion_date - create_date).days
+
+            if dias <= 2:
+                status_totals["Dentro do SLA"] += 1
+            else:
+                status_totals["Fora do SLA"] += 1
+
+        labels = list(status_totals.keys())
+        values = list(status_totals.values())
+        return labels, values
+
+  
     def __classify_departaments(self, departament):
         for category, rules in categories.items():
             if departament in rules:

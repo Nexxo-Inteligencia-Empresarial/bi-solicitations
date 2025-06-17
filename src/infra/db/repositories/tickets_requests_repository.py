@@ -32,24 +32,38 @@ class TicketsRequestsRepository(TicketsRequestsRepositoryInterface):
     def get_tickets_departaments(self, today: str):
         try:
             with DBconnectionHandler() as db_connection:
-                data = db_connection.session.\
-                    query(TicketsRequestsModel.status, func.lower(TicketsRequestsModel.departament).label("departament") ,func.count(TicketsRequestsModel.id)).\
-                    filter(or_(
+                data = db_connection.session.query(
+                    TicketsRequestsModel.status,
+                    func.lower(TicketsRequestsModel.departament).label("departament"),
+                    func.count(TicketsRequestsModel.id)
+                ).filter(
+                    or_(
                         and_(
                             TicketsRequestsModel.status != "Respondida",
                             TicketsRequestsModel.due_date <= today
-
                         ),
                         and_(
                             TicketsRequestsModel.status != "Respondida",
                             TicketsRequestsModel.due_date == None
-
                         )
-                    )).\
-                    group_by(func.lower(TicketsRequestsModel.departament),
-                             TicketsRequestsModel.status).\
-                    all()
-                
+                    )
+                ).group_by(
+                    func.lower(TicketsRequestsModel.departament),
+                    TicketsRequestsModel.status
+                ).all()
+                                
                 return data
         except Exception as exception:
             raise exception
+    
+    def get_tickets_dates(self):
+        with DBconnectionHandler() as db_connection:
+            try:
+                data = db_connection.session.\
+                    query(TicketsRequestsModel.conclusion_date, TicketsRequestsModel.create_date).\
+                    filter(TicketsRequestsModel.conclusion_date.isnot(None))
+                
+                return data
+            
+            except Exception as exception:
+                raise exception
