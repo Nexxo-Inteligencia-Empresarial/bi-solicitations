@@ -60,7 +60,7 @@ class TicketsRequestsRepository(TicketsRequestsRepositoryInterface):
         with DBconnectionHandler() as db_connection:
             try:
                 data = db_connection.session.\
-                    query(TicketsRequestsModel.conclusion_date, TicketsRequestsModel.create_date).\
+                    query(TicketsRequestsModel.conclusion_date, TicketsRequestsModel.create_date, TicketsRequestsModel.departament).\
                     filter(TicketsRequestsModel.conclusion_date.isnot(None))
                 
                 return data
