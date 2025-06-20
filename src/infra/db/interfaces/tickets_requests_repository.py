@@ -9,3 +9,7 @@ class TicketsRequestsRepositoryInterface(ABC):
     @abstractmethod
     def get_tickets_departaments(self, today: str):
         pass
+
+    @abstractmethod 
+    def get_tickets_dates(self):
+        pass

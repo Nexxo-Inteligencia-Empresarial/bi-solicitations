@@ -17,4 +17,4 @@ class TicketsRequests(Base):
     type = Column(String(50))
     due_date = Column(String, nullable=True)
     system = Column(String)
-    
+    conclusion_date = Column(String, nullable=True)
