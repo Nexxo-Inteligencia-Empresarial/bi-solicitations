@@ -29,9 +29,9 @@ def main():
     
     col1, col2 = st.columns([1,1])
     with col1:
-        start_date = st.date_input("Data de abertura", None)
+        start_date = st.date_input("Data de abertura", None, format="DD/MM/YYYY" )
     with col2:
-        close_date = st.date_input("Data de Fechamento", None)
+        close_date = st.date_input("Data de Fechamento", None, format="DD/MM/YYYY")
 
     if departaments or (start_date and close_date):
         labels, values = use_case.get_tickets_dates_filters(
