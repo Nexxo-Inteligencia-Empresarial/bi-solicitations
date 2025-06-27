@@ -72,10 +72,18 @@ class TicketsRequestsRepository(TicketsRequestsRepositoryInterface):
         with DBconnectionHandler() as db_connection:
             try:
                 data = db_connection.session.\
-                    query(TicketsRequestsModel.conclusion_date, TicketsRequestsModel.create_date, TicketsRequestsModel.departament).\
+                    query(
+                        TicketsRequestsModel.conclusion_date,
+                        TicketsRequestsModel.create_date,
+                        TicketsRequestsModel.departament,
+                        TicketsRequestsModel.ticket_id,
+                        TicketsRequestsModel.system,
+                        TicketsRequestsModel.type,
+                        TicketsRequestsModel.due_date
+                    ).\
                     filter(TicketsRequestsModel.conclusion_date.isnot(None))
-                
-                return data
+
+                return data.all()
             
             except Exception as exception:
                 raise exception
