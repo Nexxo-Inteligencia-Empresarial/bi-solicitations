@@ -11,9 +11,7 @@ class Table ():
             "type": "Tipo",
             "create_date": "Data de Criação",
             "conclusion_date": "Data de Conclusão",
-            "due_date": "Prazo",
             "days_to_conclusion": "Dias para Conclusão",
-            "sla_status": "Status do SLA"
         }
         self.__render(sla_exceeded)
 

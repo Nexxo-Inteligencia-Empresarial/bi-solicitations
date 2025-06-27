@@ -71,9 +71,7 @@ class GetTickets:
                 "type": row.type,
                 "create_date": create_date,
                 "conclusion_date": conclusion_date,
-                "due_date": row.due_date,
                 "days_to_conclusion": dias,
-                "sla_status": "Dentro do SLA" if dias <= 2 else "Fora do SLA"
             }
 
             if dias <= 2:
@@ -116,9 +114,7 @@ class GetTickets:
                 "type": row.type,
                 "create_date": create_date,
                 "conclusion_date": conclusion_date,
-                "due_date": row.due_date,
                 "days_to_conclusion": days,
-                "sla_status": "Dentro do SLA" if days <= 2 else "Fora do SLA"
             }
 
             if days <= 2:
