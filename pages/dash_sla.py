@@ -4,7 +4,7 @@ from uuid import uuid4
 from src.data.use_cases.get_tickets import GetTickets
 from src.infra.db.repositories.tickets_requests_repository import TicketsRequestsRepository
 from src.utils.map_categories import categories
-from modules import Navbar, Header, AutoRefresh, Footer
+from modules import Navbar, Header, AutoRefresh, Footer, Table
 
 
 
@@ -34,13 +34,13 @@ def main():
         close_date = st.date_input("Data de Fechamento", None, format="DD/MM/YYYY")
 
     if departaments or (start_date and close_date):
-        labels, values = use_case.get_tickets_dates_filters(
-                        departament_selected=departaments,
-                        start_date=start_date,
-                        end_date=close_date
-                    )
+        labels, values, sla_exceeded = use_case.get_tickets_dates_filters(
+            departament_selected=departaments,
+            start_date=start_date,
+            end_date=close_date
+        )
     else:
-        labels, values = use_case.get_tickets_dates()
+        labels, values, sla_exceeded = use_case.get_tickets_dates()
             
     colors = ["#3b7c59" if label != "Fora do SLA" else '#EE0000' for label in labels]
 
@@ -48,7 +48,8 @@ def main():
         labels=labels,
         values=values,
         marker_colors=colors,
-        textinfo='label+value',
+        textinfo='label+percent',
+        hoverinfo='label+value', 
         textfont_size=18,
         textfont=dict(size=18, color='white'),
         insidetextorientation='auto'
@@ -61,6 +62,8 @@ def main():
     )
 
     st.plotly_chart(fig, use_container_width=True, key=f"plot_{uuid4()}")
+
+    Table(sla_exceeded)
 
     Footer()
 
