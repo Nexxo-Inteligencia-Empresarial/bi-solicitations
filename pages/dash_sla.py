@@ -6,27 +6,25 @@ from src.infra.db.repositories.tickets_requests_repository import TicketsRequest
 from src.utils.map_categories import categories
 from modules import Navbar, Header, AutoRefresh, Footer, Table
 
-
-
 use_case = GetTickets(TicketsRequestsRepository())
 
 st.set_page_config(
     page_title="BI Solicitations",
     page_icon="🧊",
 )
-  
+
 def main():
     AutoRefresh()
     Navbar()
     Header()
-    
+
     st.title("SLA")
-    
+
     departaments = st.multiselect(
         "Escolha os departamentos", categories.keys(),
         placeholder="Selecione um departamento"
     )
-    
+
     col1, col2 = st.columns([1,1])
     with col1:
         start_date = st.date_input("Data de abertura", None, format="DD/MM/YYYY" )
@@ -41,7 +39,7 @@ def main():
         )
     else:
         labels, values, sla_exceeded = use_case.get_tickets_dates()
-            
+
     colors = ["#3b7c59" if label != "Fora do SLA" else '#EE0000' for label in labels]
 
     fig = go.Figure(data=[go.Pie(
@@ -49,7 +47,7 @@ def main():
         values=values,
         marker_colors=colors,
         textinfo='label+percent',
-        hoverinfo='label+value', 
+        hoverinfo='label+value',
         textfont_size=18,
         textfont=dict(size=18, color='white'),
         insidetextorientation='auto'

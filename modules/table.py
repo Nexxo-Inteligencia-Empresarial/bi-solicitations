@@ -1,9 +1,10 @@
 import pandas as pd
 import streamlit as st
+from typing import List, Dict
 
-class Table ():
+class Table:
 
-    def __init__(self, sla_exceeded: list[dict]):
+    def __init__(self, sla_exceeded: List[Dict]):
         self._renomed_columns = {
             "ticket_id": "ID",
             "departament": "Departamento",
@@ -15,7 +16,7 @@ class Table ():
         }
         self.__render(sla_exceeded)
 
-    def __render(self, sla_exceeded: list[dict]):
+    def __render(self, sla_exceeded: List[Dict]):
         st.subheader("Solicitações Fora do SLA")
         if sla_exceeded:
             df_fora = pd.DataFrame(sla_exceeded).rename(columns=self._renomed_columns)
