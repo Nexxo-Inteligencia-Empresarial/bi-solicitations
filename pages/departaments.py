@@ -1,13 +1,14 @@
+from datetime import datetime, date
+
 import streamlit as st
 import pandas as pd
 import altair as alt
-
 
 from src.data.use_cases.get_tickets import GetTickets
 from src.data.use_cases.get_last_executation import GetLastExecution
 from src.infra.db.repositories.tickets_requests_repository import TicketsRequestsRepository
 from src.infra.db.repositories.execution_collection_repository import ExecutionCollectionRepository
-from modules import Navbar, Header, AutoRefresh, Footer, StatusChart
+from modules import Navbar, Header, AutoRefresh, Footer, StatusChart, AlertOutdate
 
 
 use_case_tickets = GetTickets(TicketsRequestsRepository())
@@ -20,11 +21,14 @@ def main():
     AutoRefresh()
     Navbar()
     Header()
+
     datas = use_case_tickets.get_by_departament()
     datas_execution = use_case_execution.get()
 
+    AlertOutdate(datas_execution)
+
     total_solicitations = sum(sum(status_qtd.values()) for status_qtd in datas.values())
-    
+
     st.markdown("<h1 style='text-align: center; margin-bottom: 10px'>Solicitações Abertas Acessórias/Onvio</h1>", unsafe_allow_html=True)
 
     st.markdown(
