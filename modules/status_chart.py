@@ -47,8 +47,8 @@ class StatusChart:
             color=alt.Color(
                 'Status:N',
                 scale=alt.Scale(
-                    domain=['Responder', 'Resolvendo'],
-                    range=['#EE0000', '#cfaf1f']
+                    domain=['Responder', 'Resolvendo', 'Atrasadas'],
+                    range=["#2d95ec", "#f6ba2a", "#e23512"]
                 ),
                 legend=None
             )
