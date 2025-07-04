@@ -9,9 +9,9 @@ from src.utils.map_categories import categories
 class GetTickets:
     def __init__(self, tickets_requests_repository: TicketsRequestsRepositoryInterface):
         self.tickets_requests_repository = tickets_requests_repository
-    
+
     def get(self):
-        
+
         brazil_timezone = pytz.timezone('America/Sao_Paulo')
         now_brazil = datetime.now(brazil_timezone)
         today = now_brazil.isoformat()
@@ -34,26 +34,33 @@ class GetTickets:
         return labels, values
 
     def get_by_departament(self):
-
         brazil_timezone = pytz.timezone('America/Sao_Paulo')
-        now_brazil = datetime.now(brazil_timezone)
+        now_brazil = datetime.now(brazil_timezone).date()
 
         today = now_brazil.isoformat()
 
         rows = self.tickets_requests_repository.get_tickets_departaments(today)
-
-        datas = defaultdict(lambda: {"Resolvendo": 0, "Responder": 0})
-        
+        data_expired = self.tickets_requests_repository.get_tickets_expired(today)
+        datas = defaultdict(lambda: {"Resolvendo": 0, "Responder": 0, "Atrasadas": 0})
         for status, departament, count in rows:
             category = self.__classify_departaments(departament)
-            
+            if category is None:
+                continue
+            datas[category][status] += count
+
+        for departament, count_expired in data_expired:
+            category = self.__classify_departaments(departament)
             if category is None:
                 continue
 
-            datas[category][status] += count
+            datas[category]["Atrasadas"] = count_expired
+
+            datas[category]["Resolvendo"] = max(
+                0, datas[category]["Resolvendo"] - count_expired
+            )
 
         return dict(datas)
-    
+
     def get_tickets_dates(self):
         data = self.tickets_requests_repository.get_tickets_dates()
         status_totals = {"Dentro do SLA": 0, "Fora do SLA": 0}
@@ -63,7 +70,7 @@ class GetTickets:
             conclusion_date = datetime.fromisoformat(row.conclusion_date).date()
             create_date = datetime.fromisoformat(row.create_date).date()
             dias = (conclusion_date - create_date).days
-            
+
             ticket_info = {
                 "ticket_id": row.ticket_id,
                 "departament": row.departament,
@@ -85,22 +92,22 @@ class GetTickets:
 
         return labels, values, fora_sla
 
-    
+
     def get_tickets_dates_filters(self, departament_selected: Optional[List[str]] = None, start_date: Optional[date] = None, end_date: Optional[date] = None) -> Tuple[List[str], List[int]]:
         data = self.tickets_requests_repository.get_tickets_dates()
         status_totals = {"Dentro do SLA": 0, "Fora do SLA": 0}
         sla_exceeded = []
 
         for row in data:
-            
-            
+
+
             departament = self.__classify_departaments(row.departament.lower())
             if not self.__filter_departament(departament, departament_selected):
                 continue
 
             conclusion_date = datetime.fromisoformat(row.conclusion_date).date()
             create_date = datetime.fromisoformat(row.create_date).date()
-          
+
             if start_date and end_date:
                 if not self.__filter_date(conclusion_date, start_date, end_date):
                     continue
@@ -139,7 +146,7 @@ class GetTickets:
         if end and conclusion_date > end:
             return False
         return True
-  
+
     def __classify_departaments(self, departament):
         for category, rules in categories.items():
             if departament in rules:
