@@ -53,11 +53,11 @@ class GetTickets:
             if category is None:
                 continue
 
-            datas[category]["Atrasadas"] = count_expired
+            resolving_before = datas[category]["Resolvendo"]
+            subtract_amount = min(count_expired, resolving_before)
 
-            datas[category]["Resolvendo"] = max(
-                0, datas[category]["Resolvendo"] - count_expired
-            )
+            datas[category]["Atrasadas"] = datas[category]["Atrasadas"] + count_expired
+            datas[category]["Resolvendo"] = resolving_before - subtract_amount
 
         return dict(datas)
 
