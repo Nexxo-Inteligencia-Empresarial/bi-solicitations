@@ -28,10 +28,11 @@ class StatusBarChart:
         limit = int(max_val * 1.1)
 
         chart = alt.Chart(df).mark_bar(size=37).encode(
-            y=alt.Y("Departamento:N", sort='-x', title=None, axis=alt.Axis(labelFontSize=14,
+            y=alt.Y("Departamento:N", sort='-x', title=None, axis=alt.Axis(labelFontSize=18,
                                                                             labelColor="#31333F",
                                                                             labelLimit=0,
-                                                                            labelPadding=10)),
+                                                                            labelPadding=10,
+                                                                            labelFontWeight='bolder')),
             x=alt.X("Quantidade:Q", title="Quantidade", scale=alt.Scale(domain=[0, limit])),
             color=alt.Color(
                 "Status:N",
