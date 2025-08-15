@@ -5,6 +5,7 @@ import pytz
 
 from src.infra.db.interfaces.tickets_requests_repository import TicketsRequestsRepositoryInterface
 from src.utils.map_categories import categories
+from src.utils.map_months import MapMonths
 
 class GetTickets:
     def __init__(self, tickets_requests_repository: TicketsRequestsRepositoryInterface):
@@ -92,6 +93,47 @@ class GetTickets:
 
         return labels, values, fora_sla
 
+    def sla_per_month(self, departament_selected: Optional[List[str]] = None, start_date: Optional[date] = None, end_date: Optional[date] = None) -> Tuple[List[str], List[int]]:
+        data = self.tickets_requests_repository.get_tickets_dates()
+        months_sla  = months_sla = defaultdict(lambda: {"Fora do SLA": 0, "Dentro do SLA": 0})
+
+        sla_exceeded = []
+
+        for row in data:
+
+            departament = self.__classify_departaments(row.departament.lower())
+            if not self.__filter_departament(departament, departament_selected):
+                continue
+
+            conclusion_date = datetime.fromisoformat(row.conclusion_date).date()
+            create_date = datetime.fromisoformat(row.create_date).date()
+
+
+            if start_date and end_date:
+                if not self.__filter_date(conclusion_date, start_date, end_date):
+                    continue
+
+            days = (conclusion_date - create_date).days
+
+            ticket_info = {
+                "ticket_id": row.ticket_id,
+                "departament": row.departament,
+                "system": row.system,
+                "type": row.type,
+                "create_date": create_date,
+                "conclusion_date": conclusion_date,
+                "days_to_conclusion": days,
+            }
+
+            month_solicitation = create_date.month
+
+            if days <= 2:
+                months_sla[month_solicitation]["Dentro do SLA"] += 1
+            else:
+                months_sla[month_solicitation]["Fora do SLA"] += 1
+                sla_exceeded.append(ticket_info)
+
+        return dict(months_sla), sla_exceeded
 
     def get_tickets_dates_filters(self, departament_selected: Optional[List[str]] = None, start_date: Optional[date] = None, end_date: Optional[date] = None) -> Tuple[List[str], List[int]]:
         data = self.tickets_requests_repository.get_tickets_dates()

@@ -6,3 +6,5 @@ from .status_chart import StatusChart
 from .alert_outdate import AlertOutdate
 from .table import Table
 from .status_bar_chart import StatusBarChart
+from .sla_bar_chart import SlaBarChart
+from .sla_card_table import SlaCardTable
