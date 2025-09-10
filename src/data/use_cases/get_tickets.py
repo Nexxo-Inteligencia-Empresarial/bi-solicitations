@@ -34,6 +34,33 @@ class GetTickets:
         values = list(status_totals.values())
         return labels, values
 
+    def get_full(self):
+        brazil_timezone = pytz.timezone('America/Sao_Paulo')
+        now_brazil = datetime.now(brazil_timezone).date()
+
+        today = now_brazil.isoformat()
+
+        rows = self.tickets_requests_repository.get_tickets_full(today)
+        datas = []
+        for row in rows:
+            create_date = datetime.fromisoformat(row.create_date).date()
+            category = self.__classify_departaments(row.departament.lower())
+
+            ticket_info = {
+                "ticket_id": row.ticket_id,
+                "departament": category,
+                "system": row.system,
+                "type": row.type,
+                "create_date": create_date,
+                "due_date": row.due_date,
+            }
+
+            datas.append(ticket_info)
+
+        return datas
+
+
+
     def get_by_departament(self):
         brazil_timezone = pytz.timezone('America/Sao_Paulo')
         now_brazil = datetime.now(brazil_timezone).date()
