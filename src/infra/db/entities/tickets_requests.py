@@ -3,7 +3,7 @@ from src.infra.db.settings.base import Base
 
 class TicketsRequests(Base):
     __tablename__ = "tickets_requests"
-    
+
     __table_args__ = (
         UniqueConstraint('ticket_id', 'system', name='uq_task_departament'),
     )
@@ -18,3 +18,4 @@ class TicketsRequests(Base):
     due_date = Column(String, nullable=True)
     system = Column(String)
     conclusion_date = Column(String, nullable=True)
+    responsible = Column(String)
