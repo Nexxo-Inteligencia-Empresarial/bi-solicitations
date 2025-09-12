@@ -41,8 +41,7 @@ def main():
         datas = use_case_tickets.get_full()
     datas_execution = use_case_execution.get()
 
-    st.dataframe(datas)
-
+    st.dataframe(datas,height=700)
 
     for system, last_execution in datas_execution:
         st.markdown(f"""
