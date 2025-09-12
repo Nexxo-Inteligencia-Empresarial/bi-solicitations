@@ -13,3 +13,7 @@ class TicketsRequestsRepositoryInterface(ABC):
     @abstractmethod
     def get_tickets_expired(self, today: str):
         pass
+
+    @abstractmethod
+    def get_tickets_full(self, today: str):
+        pass

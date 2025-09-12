@@ -84,6 +84,37 @@ class TicketsRequestsRepository(TicketsRequestsRepositoryInterface):
         except Exception as exception:
             raise exception
 
+    def get_tickets_full(self, today: str):
+        today_18h = self.__get_today_utc_18h()
+        try:
+            with DBconnectionHandler() as db_connection:
+                data = db_connection.session.query(
+                    TicketsRequestsModel
+                ).filter(or_(
+                    and_(
+                        TicketsRequestsModel.status != "Respondida",
+                        TicketsRequestsModel.due_date <= today
+                    ),
+                    and_(
+                        TicketsRequestsModel.status != "Respondida",
+                        TicketsRequestsModel.due_date == None
+                    )
+                )).filter(
+                    or_(
+                        and_(
+                            TicketsRequestsModel.create_date.contains(' '),
+                            TicketsRequestsModel.create_date <= today_18h.strftime('%Y-%m-%d %H:%M')
+                        ),
+                        and_(
+                            ~TicketsRequestsModel.create_date.contains(' '),
+                            cast(TicketsRequestsModel.create_date, Date) <= today_18h.date()
+                        )
+                    )
+                ).all()
+                return data
+        except Exception as exception:
+            raise exception
+
     def __get_today_utc_18h(self):
         br_tz = pytz.timezone("America/Sao_Paulo")
         today_18h_br = br_tz.localize(datetime.now().replace(hour=18, minute=0, second=0, microsecond=0))
