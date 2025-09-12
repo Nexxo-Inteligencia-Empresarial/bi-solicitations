@@ -34,7 +34,7 @@ class GetTickets:
         values = list(status_totals.values())
         return labels, values
 
-    def get_full(self):
+    def get_full(self, ft_dpt:Optional[List[str]] = None, ft_stts:Optional[List[str]] = None):
         brazil_timezone = pytz.timezone('America/Sao_Paulo')
         now_brazil = datetime.now(brazil_timezone).date()
 
@@ -44,15 +44,30 @@ class GetTickets:
         datas = []
         for row in rows:
             create_date = datetime.fromisoformat(row.create_date).date()
+
             category = self.__classify_departaments(row.departament.lower())
 
+            if not self.__filter_departament(category, ft_dpt):
+                continue
+
+            today = date.today()
+
+            due_date = datetime.fromisoformat(row.due_date).date() if row.due_date else None
+
+            if due_date and due_date <  today :
+                row.status = "Atrasada"
+
+            if not self.__filter_status(row.status, ft_stts):
+                continue
+
             ticket_info = {
-                "ticket_id": row.ticket_id,
-                "departament": category,
-                "system": row.system,
-                "type": row.type,
-                "create_date": create_date,
-                "due_date": row.due_date,
+                "ID": row.ticket_id,
+                "Departamento": category,
+                "Status": row.status,
+                "Vencimento": row.due_date,
+                "Criação": create_date,
+                "Sistema": row.system,
+                "Tipo": row.type,
             }
 
             datas.append(ticket_info)
@@ -208,6 +223,11 @@ class GetTickets:
         if selected is None or not selected:
             return True
         return departament in selected
+
+    def __filter_status(self, status: str, selected: Optional[List[str]]) -> bool:
+        if selected is None or not selected:
+            return True
+        return status in selected
 
     def __filter_date(self, conclusion_date: date, start: Optional[date], end: Optional[date]) -> bool:
         if start and conclusion_date < start:
