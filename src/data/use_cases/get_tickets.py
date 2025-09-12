@@ -66,6 +66,7 @@ class GetTickets:
                 "Status": row.status,
                 "Vencimento": row.due_date,
                 "Criação": create_date,
+                "Responsável" : row.responsible,
                 "Sistema": row.system,
                 "Tipo": row.type,
             }
