@@ -1,4 +1,4 @@
-from datetime import datetime, time
+from datetime import datetime
 import pytz
 
 from sqlalchemy import func, or_, and_, cast, Date
@@ -10,7 +10,7 @@ from src.infra.db.interfaces.tickets_requests_repository import TicketsRequestsR
 class TicketsRequestsRepository(TicketsRequestsRepositoryInterface):
 
     def get_tickets_departaments(self, today: str):
-        today_18h = self.__get_today_utc_18h()
+        deadline = self.__deadline()
         try:
             with DBconnectionHandler() as db_connection:
                 data = db_connection.session.query(
@@ -30,11 +30,11 @@ class TicketsRequestsRepository(TicketsRequestsRepositoryInterface):
                     or_(
                         and_(
                             TicketsRequestsModel.create_date.contains(' '),
-                            TicketsRequestsModel.create_date <= today_18h.strftime('%Y-%m-%d %H:%M')
+                            TicketsRequestsModel.create_date <= deadline.strftime('%Y-%m-%d %H:%M')
                         ),
                         and_(
                             ~TicketsRequestsModel.create_date.contains(' '),
-                            cast(TicketsRequestsModel.create_date, Date) <= today_18h.date()
+                            cast(TicketsRequestsModel.create_date, Date) <= deadline.date()
                         )
                     )
                 ).group_by(
@@ -85,7 +85,7 @@ class TicketsRequestsRepository(TicketsRequestsRepositoryInterface):
             raise exception
 
     def get_tickets_full(self, today: str):
-        today_18h = self.__get_today_utc_18h()
+        deadline = self.__deadline()
         try:
             with DBconnectionHandler() as db_connection:
                 data = db_connection.session.query(
@@ -103,11 +103,11 @@ class TicketsRequestsRepository(TicketsRequestsRepositoryInterface):
                     or_(
                         and_(
                             TicketsRequestsModel.create_date.contains(' '),
-                            TicketsRequestsModel.create_date <= today_18h.strftime('%Y-%m-%d %H:%M')
+                            TicketsRequestsModel.create_date <= deadline.strftime('%Y-%m-%d %H:%M')
                         ),
                         and_(
                             ~TicketsRequestsModel.create_date.contains(' '),
-                            cast(TicketsRequestsModel.create_date, Date) <= today_18h.date()
+                            cast(TicketsRequestsModel.create_date, Date) <= deadline.date()
                         )
                     )
                 ).all()
@@ -115,8 +115,13 @@ class TicketsRequestsRepository(TicketsRequestsRepositoryInterface):
         except Exception as exception:
             raise exception
 
-    def __get_today_utc_18h(self):
+    def __deadline(self):
         br_tz = pytz.timezone("America/Sao_Paulo")
-        today_18h_br = br_tz.localize(datetime.now().replace(hour=18, minute=0, second=0, microsecond=0))
-        today_18h_utc = today_18h_br.astimezone(pytz.UTC)
-        return today_18h_utc
+        now = datetime.now(br_tz)
+
+        limit = 17 if now.weekday() == 4 else 18
+
+        deadline = now.replace(hour=limit, minute=0, second=0, microsecond=0)
+        deadline_utc = deadline.astimezone(pytz.UTC)
+
+        return deadline_utc
