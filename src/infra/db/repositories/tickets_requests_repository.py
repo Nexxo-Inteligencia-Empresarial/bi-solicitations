@@ -45,19 +45,11 @@ class TicketsRequestsRepository(TicketsRequestsRepositoryInterface):
         except Exception as exception:
             raise exception
 
-    def get_tickets_dates(self):
+    def get_conclued_tickets(self):
         with DBconnectionHandler() as db_connection:
             try:
                 data = db_connection.session.\
-                    query(
-                        TicketsRequestsModel.conclusion_date,
-                        TicketsRequestsModel.create_date,
-                        TicketsRequestsModel.departament,
-                        TicketsRequestsModel.ticket_id,
-                        TicketsRequestsModel.system,
-                        TicketsRequestsModel.type,
-                        TicketsRequestsModel.due_date
-                    ).\
+                    query(TicketsRequestsModel).\
                     filter(TicketsRequestsModel.conclusion_date.isnot(None))
 
                 return data.all()
@@ -65,26 +57,7 @@ class TicketsRequestsRepository(TicketsRequestsRepositoryInterface):
             except Exception as exception:
                 raise exception
 
-    def get_tickets_expired(self, today: str):
-        try:
-            with DBconnectionHandler() as db_connection:
-                data = db_connection.session.query(
-                    func.lower(TicketsRequestsModel.departament).label("departament"),
-                    func.count(TicketsRequestsModel.id).label("total_atrasados")
-                ).filter(
-                      and_(
-                            TicketsRequestsModel.status == "Resolvendo",
-                            TicketsRequestsModel.due_date < today
-                        )
-                ).group_by(
-                    func.lower(TicketsRequestsModel.departament)
-                ).all()
-
-                return data
-        except Exception as exception:
-            raise exception
-
-    def get_tickets_full(self, today: str):
+    def get_open_tickets(self, today: str):
         deadline = self.__deadline()
         try:
             with DBconnectionHandler() as db_connection:
@@ -111,6 +84,25 @@ class TicketsRequestsRepository(TicketsRequestsRepositoryInterface):
                         )
                     )
                 ).all()
+                return data
+        except Exception as exception:
+            raise exception
+
+    def get_expired_tickets(self, today: str):
+        try:
+            with DBconnectionHandler() as db_connection:
+                data = db_connection.session.query(
+                    func.lower(TicketsRequestsModel.departament).label("departament"),
+                    func.count(TicketsRequestsModel.id).label("total_atrasados")
+                ).filter(
+                      and_(
+                            TicketsRequestsModel.status == "Resolvendo",
+                            TicketsRequestsModel.due_date < today
+                        )
+                ).group_by(
+                    func.lower(TicketsRequestsModel.departament)
+                ).all()
+
                 return data
         except Exception as exception:
             raise exception

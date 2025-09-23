@@ -2,24 +2,19 @@ import pandas as pd
 import altair as alt
 import streamlit as st
 
-from src.data.use_cases.interface.get_tickets import GetTickets
+class StatusBarChartPage:
 
-class StatusBarChart:
+    def __init__(self, data_items: list):
+        self.__render(data_items)
 
-    def __init__(self, use_case: GetTickets, ft_dpt):
-        datas = use_case.get_by_departament(ft_dpt)
-        self.__render(datas)
+    def __render(self, data_items: list):
+        df = self.__create_combined_dataframe(data_items)
+        chart = self.__create_stacked_bar_chart(df)
+        st.altair_chart(chart, use_container_width=True)
 
-    def __render(self,datas):
-        datas = self.__process_datas(datas)
-        if datas:
-            df = self.__create_combined_dataframe(datas)
-            chart = self.__create_stacked_bar_chart(df)
-            st.altair_chart(chart, use_container_width=True)
-
-    def __create_combined_dataframe(self, datas: list) -> pd.DataFrame:
+    def __create_combined_dataframe(self, data_items: list) -> pd.DataFrame:
         records = []
-        for department, values in datas:
+        for department, values in data_items:
             for status, qty in values.items():
                 records.append({
                     "Departamento": department,
@@ -33,11 +28,11 @@ class StatusBarChart:
         limit = int(max_val * 1.1)
 
         chart = alt.Chart(df).mark_bar(size=37).encode(
-            y=alt.Y("Departamento:N", sort='-x', title=None, axis=alt.Axis(labelFontSize=15,
+            y=alt.Y("Departamento:N", sort='-x', title=None, axis=alt.Axis(labelFontSize=18,
                                                                             labelColor="#31333F",
                                                                             labelLimit=0,
                                                                             labelPadding=10,
-                                                                            )),
+                                                                            labelFontWeight='bolder')),
             x=alt.X("Quantidade:Q", title="Quantidade", scale=alt.Scale(domain=[0, limit])),
             color=alt.Color(
                 "Status:N",
@@ -50,7 +45,8 @@ class StatusBarChart:
             tooltip=["Departamento:N", "Status:N", "Quantidade:Q"]
         ).properties(
             width=700,
-            height=550,
+            height=700,
+            title="Solicitações por Departamento e Status"
         ).configure_axis(
             labelFontSize=14,
             titleFontSize=14,
@@ -60,8 +56,3 @@ class StatusBarChart:
         )
 
         return chart
-
-    def __process_datas(self, datas):
-        datas_itens = list(datas.items())
-        datas_itens.sort(key=lambda item: sum(item[1].values()), reverse=True)
-        return datas_itens

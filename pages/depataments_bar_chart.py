@@ -8,13 +8,14 @@ from src.data.use_cases.get_tickets import GetTickets
 from src.data.use_cases.get_last_executation import GetLastExecution
 from src.infra.db.repositories.tickets_requests_repository import TicketsRequestsRepository
 from src.infra.db.repositories.execution_collection_repository import ExecutionCollectionRepository
-from modules import Navbar, Header, AutoRefresh, Footer, StatusBarChart, AlertOutdate
+from modules import Navbar, Header, AutoRefresh, Footer, StatusBarChartPage, AlertOutdate
 
 
 use_case_tickets = GetTickets(TicketsRequestsRepository())
 use_case_execution = GetLastExecution(ExecutionCollectionRepository())
 
 st.set_page_config(layout="wide", page_title="BI Solicitations", page_icon="🧊")
+st.logo(image='images/logo.png')
 
 
 def main():
@@ -39,7 +40,7 @@ def main():
     datas_itens = list(datas.items())
     datas_itens.sort(key=lambda item: sum(item[1].values()), reverse=True)
 
-    StatusBarChart(datas_itens)
+    StatusBarChartPage(datas_itens)
 
     for system, last_execution in datas_execution:
         st.markdown(f"""

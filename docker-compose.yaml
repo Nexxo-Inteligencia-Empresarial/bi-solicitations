@@ -1,0 +1,11 @@
+services:
+  app:
+    build: .
+    container_name: bi-solicitations
+    restart: unless-stopped
+    volumes:
+      - .:/app
+    ports:
+      - 8501:8501
+volumes:
+  postgres_data:
