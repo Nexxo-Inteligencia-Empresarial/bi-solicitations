@@ -7,10 +7,10 @@ class  AlertOutdate():
         self.__render(last_execution_datas)
 
     def __render(self, last_execution_datas):
-        today = datetime.now()
-        for system , last_execution in last_execution_datas:
-            last_execution = last_execution
-            days = (today - last_execution).days
+        now = datetime.now()
+        for system, last_execution in last_execution_datas:
+            elapsed_time = now - last_execution
+            minutes_passed = elapsed_time.total_seconds() / 60
 
-            if days >= 1 :
-                st.warning(f"Coleta do sistema {system} está desatualizada ", icon='⚠️', )
+            if minutes_passed >= 45:
+                st.warning(f"Coleta do sistema {system} está desatualizada", icon='⚠️')

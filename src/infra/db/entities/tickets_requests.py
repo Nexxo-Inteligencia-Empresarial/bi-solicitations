@@ -19,3 +19,18 @@ class TicketsRequests(Base):
     system = Column(String)
     conclusion_date = Column(String, nullable=True)
     responsible = Column(String)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "ticket_id": self.ticket_id,
+            "code": self.code,
+            "create_date": self.create_date,
+            "departament": self.departament,
+            "status": self.status,
+            "type": self.type,
+            "due_date": self.due_date,
+            "system": self.system,
+            "conclusion_date": self.conclusion_date,
+            "responsible": self.responsible,
+        }

@@ -15,6 +15,7 @@ use_case_tickets = GetTickets(TicketsRequestsRepository())
 use_case_execution = GetLastExecution(ExecutionCollectionRepository())
 
 st.set_page_config(layout="wide", page_title="BI Solicitations", page_icon="🧊")
+st.logo(image='images/logo.png')
 
 
 def main():

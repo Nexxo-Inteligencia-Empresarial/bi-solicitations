@@ -4,7 +4,11 @@ from .nav import Navbar
 from .footer import Footer
 from .status_chart import StatusChart
 from .alert_outdate import AlertOutdate
-from .table import Table
+from .table_sla_exceded import TableSlaExceded
 from .status_bar_chart import StatusBarChart
 from .sla_bar_chart import SlaBarChart
 from .sla_card_table import SlaCardTable
+from .status_pie_chart import StatusPieChart
+from .table_solicitations import TableSolicitations
+from .sla_pie_chart import SlaPieChart
+from .status_bar_chart_page import StatusBarChartPage

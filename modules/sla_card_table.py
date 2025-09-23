@@ -1,10 +1,14 @@
 import streamlit as st
 import pandas as pd
-from src.utils.map_months import MapMonths
+
+from src.utils.mappings import Mappings
+from src.data.use_cases.interface.get_tickets import GetTickets
+
 
 class SlaCardTable:
 
-    def __init__(self, datas):
+    def __init__(self, use_case: GetTickets, ft_dpt, start_date, close_date):
+        datas = use_case.sla_per_month(ft_dpt, start_date, close_date)
         self.__render(datas)
 
     def __render(self, datas):
@@ -15,7 +19,7 @@ class SlaCardTable:
             dentro = datas[m]["Dentro do SLA"]
             fora = datas[m]["Fora do SLA"]
             tabela.append({
-                "Mês": MapMonths.months(m),
+                "Mês": Mappings.months(m),
                 "Dentro do SLA": dentro,
                 "Fora do SLA": fora
             })
@@ -24,8 +28,10 @@ class SlaCardTable:
 
         with st.container():
             st.subheader("Resumo mensal")
-            st.dataframe(
-                df,
-                hide_index=True,
-                use_container_width=True
-            )
+
+            with st.expander("📋 Ver tabela completa"):
+                st.dataframe(
+                    df,
+                    hide_index=True,
+                    use_container_width=True
+                )
