@@ -2,6 +2,8 @@ import pandas as pd
 import altair as alt
 import streamlit as st
 
+from src.utils.mappings import Mappings
+
 class StatusBarChartPage:
 
     def __init__(self, data_items: list):
@@ -16,6 +18,7 @@ class StatusBarChartPage:
         records = []
         for department, values in data_items:
             for status, qty in values.items():
+                status = Mappings.status(status)
                 records.append({
                     "Departamento": department,
                     "Status": status,
@@ -37,7 +40,7 @@ class StatusBarChartPage:
             color=alt.Color(
                 "Status:N",
                 scale=alt.Scale(
-                    domain=["Responder", "Resolvendo", "Atrasadas"],
+                    domain=["Sem Análise", "Resolvendo", "Atrasadas"],
                     range=["#2d95ec", "#f6ba2a", "#e23512"]
                 ),
                 legend=alt.Legend(title="Status")

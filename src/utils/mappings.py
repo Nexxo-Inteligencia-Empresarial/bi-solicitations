@@ -58,3 +58,11 @@ class Mappings:
         }
 
         return color_map.get(status)
+
+    @classmethod
+    def status(cls, status):
+        mapping = {
+            "Responder": "Sem Análise"
+        }
+
+        return mapping.get(status, status)

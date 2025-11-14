@@ -2,6 +2,8 @@ import pandas as pd
 import altair as alt
 import streamlit as st
 
+from src.utils.mappings import Mappings
+
 class StatusChart:
 
     def __init__(self, data_items: list):
@@ -29,9 +31,14 @@ class StatusChart:
             st.altair_chart(chart, use_container_width=False)
 
     def __create_status_dataframe(self, values: dict) -> pd.DataFrame:
+
+        new_values = {
+            Mappings.status(k): v for k, v in values.items()
+        }
+
         return pd.DataFrame({
-            "Status": list(values.keys()),
-            "Quantity": list(values.values())
+            "Status": list(new_values.keys()),
+            "Quantity": list(new_values.values())
         })
 
     def __create_status_chart(self, df: pd.DataFrame) -> alt.Chart:
@@ -47,7 +54,7 @@ class StatusChart:
             color=alt.Color(
                 'Status:N',
                 scale=alt.Scale(
-                    domain=['Responder', 'Resolvendo', 'Atrasadas'],
+                    domain=['Sem Análise', 'Resolvendo', 'Atrasadas'],
                     range=["#2d95ec", "#f6ba2a", "#e23512"]
                 ),
                 legend=None

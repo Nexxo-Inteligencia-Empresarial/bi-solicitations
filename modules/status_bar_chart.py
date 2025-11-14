@@ -2,6 +2,7 @@ import pandas as pd
 import altair as alt
 import streamlit as st
 
+from src.utils.mappings import Mappings
 from src.data.use_cases.interface.get_tickets import GetTickets
 
 class StatusBarChart:
@@ -21,6 +22,7 @@ class StatusBarChart:
         records = []
         for department, values in datas:
             for status, qty in values.items():
+                status = Mappings.status(status)
                 records.append({
                     "Departamento": department,
                     "Status": status,
@@ -42,7 +44,7 @@ class StatusBarChart:
             color=alt.Color(
                 "Status:N",
                 scale=alt.Scale(
-                    domain=["Responder", "Resolvendo", "Atrasadas"],
+                    domain=["Sem Análise", "Resolvendo", "Atrasadas"],
                     range=["#2d95ec", "#f6ba2a", "#e23512"]
                 ),
                 legend=alt.Legend(title="Status")
