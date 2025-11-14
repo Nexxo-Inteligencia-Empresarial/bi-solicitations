@@ -52,9 +52,17 @@ class Mappings:
     @classmethod
     def color(cls, status:str):
         color_map = {
-            "Responder": "#1e7dca",
+            "Sem Análise": "#1e7dca",
             "Resolvendo": "#f6ba2a",
             "Atrasada": "#e23512"
         }
 
         return color_map.get(status)
+
+    @classmethod
+    def status(cls, status):
+        mapping = {
+            "Responder": "Sem Análise"
+        }
+
+        return mapping.get(status, status)

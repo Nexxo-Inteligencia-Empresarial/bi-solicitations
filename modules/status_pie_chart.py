@@ -12,8 +12,14 @@ class StatusPieChart:
         self.__render(datas)
 
     def __render(self, datas):
-        labels = list(datas.keys())
-        values = list(datas.values())
+
+        renamed_datas = {
+            Mappings.status(status): qty
+            for status, qty in datas.items()
+        }
+
+        labels = list(renamed_datas.keys())
+        values = list(renamed_datas.values())
 
         colors = [Mappings.color(label) for label in labels]
 
