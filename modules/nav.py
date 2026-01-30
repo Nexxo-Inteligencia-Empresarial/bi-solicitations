@@ -7,3 +7,4 @@ def Navbar():
         st.page_link('pages/departaments.py', label='Departamentos')
         st.page_link('pages/depataments_bar_chart.py', label='Departamentos (Barras)')
         st.page_link('pages/dash_sla.py', label='SLA')
+        st.page_link('pages/employee_dashboard.py', label= 'OS - Responsáveis')
