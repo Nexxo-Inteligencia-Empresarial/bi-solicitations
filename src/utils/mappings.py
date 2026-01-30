@@ -66,3 +66,15 @@ class Mappings:
         }
 
         return mapping.get(status, status)
+
+    @classmethod
+    def ticket_to_dict(cls, ticket):
+        return {
+            "Ticket": ticket.ticket_id,
+            "Departamento": ticket.departament,
+            "Responsável": ticket.responsible,
+            "Criado em": ticket.create_date,
+            "Concluído em": ticket.conclusion_date,
+            "Sistema": ticket.system,
+            "Tipo": ticket.type
+        }

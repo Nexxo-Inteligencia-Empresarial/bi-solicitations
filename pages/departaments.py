@@ -1,8 +1,4 @@
-from datetime import datetime, date
-
 import streamlit as st
-import pandas as pd
-import altair as alt
 
 from src.data.use_cases.get_tickets import GetTickets
 from src.data.use_cases.get_last_executation import GetLastExecution
