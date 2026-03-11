@@ -42,14 +42,6 @@ class Mappings:
         return status in selected
 
     @classmethod
-    def filter_date(cls, conclusion_date: date, start: Optional[date], end: Optional[date]) -> bool:
-        if start and conclusion_date < start:
-            return False
-        if end and conclusion_date > end:
-            return False
-        return True
-
-    @classmethod
     def color(cls, status:str):
         color_map = {
             "Sem Análise": "#1e7dca",

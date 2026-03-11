@@ -6,8 +6,7 @@ from src.data.use_cases.interface.get_tickets import GetTickets
 
 class SlaBarChart:
 
-    def __init__(self, use_case: GetTickets, ft_dpt, start_date, end_date):
-        datas = use_case.sla_per_month(ft_dpt, start_date, end_date)
+    def __init__(self, datas):
         self.__render(datas)
 
     def __render(self, datas):

@@ -1,5 +1,5 @@
 from datetime import datetime, date
-from typing import Optional, List, Tuple
+from typing import Optional, List
 from collections import Counter
 import pytz
 
@@ -39,24 +39,24 @@ class GetTickets(GetTicketsInterface):
 
     def sla_per_month(self, departament_selected: Optional[List[str]] = None, start_date: Optional[date] = None, end_date: Optional[date] = None):
 
-        rows = self.tickets_requests_repository.get_conclued_tickets()
+        rows = self.__get_tickets_to_sla_dashboard(start_date, end_date)
         rows = [ row.to_dict() for row in rows]
 
-        return process_sla_per_month(rows, departament_selected, start_date, end_date)
+        return process_sla_per_month(rows, departament_selected)
 
     def get_sla(self, departament_selected: Optional[List[str]] = None, start_date: Optional[date] = None, end_date: Optional[date] = None):
 
-        rows = self.tickets_requests_repository.get_conclued_tickets()
+        rows = self.__get_tickets_to_sla_dashboard(start_date, end_date)
         rows = [ row.to_dict() for row in rows]
 
-        return process_general_sla(rows, departament_selected, start_date, end_date)
+        return process_general_sla(rows, departament_selected)
 
     def get_sla_exceded(self, departament_selected: Optional[List[str]] = None, start_date: Optional[date] = None, end_date: Optional[date] = None):
 
-        rows = self.tickets_requests_repository.get_conclued_tickets()
+        rows = self.__get_tickets_to_sla_dashboard(start_date, end_date)
         rows = [ row.to_dict() for row in rows]
 
-        return process_exceded_sla(rows, departament_selected, start_date, end_date)
+        return process_exceded_sla(rows, departament_selected)
 
     def __today(self):
 
@@ -65,3 +65,17 @@ class GetTickets(GetTicketsInterface):
         today = now_brazil.isoformat()
 
         return today
+
+    def __get_tickets_to_sla_dashboard(self, start_date=None, end_date=None):
+        today = date.today()
+
+        if start_date is None or end_date is None or start_date > end_date:
+            start_date = date(today.year, 1, 1)
+            end_date = today
+
+        start_date = start_date.strftime("%Y-%m-%d")
+        end_date = end_date.strftime("%Y-%m-%d")
+
+        rows = self.tickets_requests_repository.get_conclued_tickets(start_date, end_date)
+
+        return rows

@@ -3,8 +3,7 @@ import streamlit as st
 from src.data.use_cases.interface.get_tickets import GetTickets
 class TableSlaExceded():
 
-    def __init__(self, use_case: GetTickets, ft_dpt, start_date, end_date):
-        datas = use_case.get_sla_exceded(ft_dpt, start_date, end_date)
+    def __init__(self, datas):
         self.__render(datas)
 
     def __render(self, sla_exceded: list[dict]):

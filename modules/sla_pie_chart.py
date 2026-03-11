@@ -6,8 +6,7 @@ from src.data.use_cases.interface.get_tickets import GetTickets
 
 class SlaPieChart():
 
-    def __init__(self, use_case: GetTickets, ft_dpt, start_date, close_date):
-        datas = use_case.get_sla(ft_dpt, start_date, close_date)
+    def __init__(self,datas):
         self.__render(datas)
 
     def __render(self, datas):

@@ -1,7 +1,6 @@
 from datetime import datetime, date
 from collections import defaultdict
-from typing import Optional, List, Tuple, Dict
-import pytz
+from typing import List, Dict
 
 import streamlit as st
 
@@ -43,8 +42,7 @@ def process_tickets(rows, data_expired, ft_dpt):
 def process_open_tickets(rows: List[Dict], ft_dpt, ft_stts):
     datas = []
     for row in rows:
-        create_date = datetime.fromisoformat(row.get("create_date")).date()
-
+        create_date = parse_date(row.get("create_date"))
         departament = Mappings.classify_departaments(row.get("departament").lower())
 
         if departament is None:
@@ -75,35 +73,24 @@ def process_open_tickets(rows: List[Dict], ft_dpt, ft_stts):
         }
 
         datas.append(ticket_info)
-
     return datas
 
 @st.cache_data
-def process_sla_per_month(rows: List[Dict], departament_selected, start_date, end_date):
+def process_sla_per_month(rows: List[Dict], departament_selected):
     months_sla  = months_sla = defaultdict(lambda: {"Fora do SLA": 0, "Dentro do SLA": 0})
 
     for row in rows:
 
         departament = Mappings.classify_departaments(row.get('departament').lower())
+        conclusion_date = parse_date(row.get('conclusion_date'))
+        create_date = parse_date(row.get('create_date'))
 
-        if departament is None:
-            continue
-
-        if not Mappings.filter_departament(departament, departament_selected):
-            continue
-
-        conclusion_date = datetime.fromisoformat(row.get('conclusion_date')).date()
-        create_date = datetime.fromisoformat(row.get('create_date')).date()
-
-
-        if start_date and end_date:
-            if not Mappings.filter_date(conclusion_date, start_date, end_date):
-                continue
+        if departament is None: continue
+        if not Mappings.filter_departament(departament, departament_selected): continue
+        if  not create_date or not conclusion_date: continue
 
         days = (conclusion_date - create_date).days
-
-
-        month_solicitation = create_date.month
+        month_solicitation = conclusion_date.month
 
         if days <= 2:
             months_sla[month_solicitation]["Dentro do SLA"] += 1
@@ -113,29 +100,20 @@ def process_sla_per_month(rows: List[Dict], departament_selected, start_date, en
     return dict(months_sla)
 
 @st.cache_data
-def process_general_sla(rows: List[Dict], departament_selected, start_date, end_date):
+def process_general_sla(rows: List[Dict], departament_selected):
         status_totals = {"Dentro do SLA": 0, "Fora do SLA": 0}
 
         for row in rows:
 
-
             departament = Mappings.classify_departaments(row.get('departament').lower())
+            conclusion_date = parse_date(row.get('conclusion_date'))
+            create_date = parse_date(row.get('create_date'))
 
-            if departament is None:
-                continue
-
-            if not Mappings.filter_departament(departament, departament_selected):
-                continue
-
-            conclusion_date = datetime.fromisoformat(row.get('conclusion_date')).date()
-            create_date = datetime.fromisoformat(row.get('create_date')).date()
-
-            if start_date and end_date:
-                if not Mappings.filter_date(conclusion_date, start_date, end_date):
-                    continue
+            if departament is None: continue
+            if not Mappings.filter_departament(departament, departament_selected): continue
+            if  not create_date or not conclusion_date: continue
 
             days = (conclusion_date - create_date).days
-
 
             if days <= 2:
                 status_totals["Dentro do SLA"] += 1
@@ -148,25 +126,18 @@ def process_general_sla(rows: List[Dict], departament_selected, start_date, end_
         return labels, values
 
 @st.cache_data
-def process_exceded_sla(rows: List[Dict], departament_selected, start_date, end_date):
+def process_exceded_sla(rows: List[Dict], departament_selected):
         sla_exceeded = []
 
         for row in rows:
 
             departament = Mappings.classify_departaments(row.get('departament').lower())
+            conclusion_date = parse_date(row.get('conclusion_date'))
+            create_date = parse_date(row.get('create_date'))
 
-            if departament is None:
-                continue
-
-            if not Mappings.filter_departament(departament, departament_selected):
-                continue
-
-            conclusion_date = datetime.fromisoformat(row.get('conclusion_date')).date()
-            create_date = datetime.fromisoformat(row.get('create_date')).date()
-
-            if start_date and end_date:
-                if not Mappings.filter_date(conclusion_date, start_date, end_date):
-                    continue
+            if departament is None: continue
+            if not Mappings.filter_departament(departament, departament_selected): continue
+            if  not create_date or not conclusion_date: continue
 
             days = (conclusion_date - create_date).days
 
@@ -184,3 +155,10 @@ def process_exceded_sla(rows: List[Dict], departament_selected, start_date, end_
                 sla_exceeded.append(ticket_info)
 
         return sla_exceeded
+
+def parse_date(value):
+    if isinstance(value, str):
+        return datetime.fromisoformat(value).date()
+    if isinstance(value, datetime):
+        return value.date()
+    return value
