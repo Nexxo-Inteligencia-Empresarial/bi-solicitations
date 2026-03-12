@@ -56,7 +56,6 @@ def main():
             </div>
         """, unsafe_allow_html=True)
 
-
     Footer()
 
 if __name__ == '__main__':
