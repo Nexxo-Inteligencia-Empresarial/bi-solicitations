@@ -2,7 +2,8 @@ import streamlit as st
 
 from src.data.use_cases.get_tickets_sla import GetTicketsSla as Dataset
 from src.infra.db.repositories.tickets_requests_repository import TicketsRequestsRepository
-from src.utils.map_categories import categories
+from src.utils.map_departaments import departaments
+from src.utils.mappings import Mappings
 from modules import Navbar, Header, AutoRefresh, Footer, TableSlaExceded, SlaPieChart, SlaBarChart, SlaCardTable
 
 
@@ -24,25 +25,31 @@ def main():
     st.title("SLA")
 
     ft_dpt = st.multiselect(
-        "Escolha os departamentos", categories.keys(),
+        "Escolha os departamentos", departaments.keys(),
         placeholder="Selecione um departamento"
     )
 
     col1, col2 = st.columns([1,1])
+
+
     with col1:
         start_date = st.date_input("Data de abertura", None, format="DD/MM/YYYY" )
     with col2:
         close_date = st.date_input("Data de Fechamento", None, format="DD/MM/YYYY")
+    categories_options = Mappings.categories()
+    categories =  st.multiselect("Cateogrias", categories_options, default=categories_options)
 
-    render(ft_dpt, start_date, close_date)
-
+    render(ft_dpt, start_date, close_date, categories)
     Footer()
 
 @st.cache_resource
-def render(ft_dpt, start_date, close_date):
+def render(ft_dpt, start_date, close_date, categories):
+
+
+
     col_graph1, col_graph2 = st.columns([2, 1])
 
-    dataset.set_dataset(start_date, close_date)
+    dataset.set_dataset(start_date, close_date, categories)
 
     with col_graph1:
         SlaBarChart(dataset.sla_per_month(ft_dpt))

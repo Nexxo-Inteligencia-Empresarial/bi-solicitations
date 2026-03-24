@@ -13,8 +13,8 @@ class GetTicketsSla():
         self.__repository = repository
         self.__rows = None
 
-    def set_dataset(self, start_date: Optional[date] = None, end_date: Optional[date] = None):
-        rows = self.__get_tickets_to_sla_dashboard(start_date, end_date)
+    def set_dataset(self, start_date: Optional[date] = None, end_date: Optional[date] = None, categories: Optional[List[str]] = None):
+        rows = self.__get_tickets_to_sla_dashboard(start_date, end_date, categories)
         self.__rows = [ row.to_dict() for row in rows]
 
     def sla_per_month(self, departament_selected: Optional[List[str]] = None):
@@ -26,7 +26,7 @@ class GetTicketsSla():
     def get_sla_exceded(self, departament_selected: Optional[List[str]] = None):
         return process_exceded_sla(self.__rows, departament_selected)
 
-    def __get_tickets_to_sla_dashboard(self, start_date=None, end_date=None):
+    def __get_tickets_to_sla_dashboard(self, start_date=None, end_date=None, categories=None):
         today = date.today()
 
         if start_date is None or end_date is None or start_date > end_date:
@@ -36,6 +36,6 @@ class GetTicketsSla():
         start_date = start_date.strftime("%Y-%m-%d")
         end_date = end_date.strftime("%Y-%m-%d")
 
-        rows = self.__repository.get_conclued_tickets(start_date, end_date)
+        rows = self.__repository.get_conclued_tickets(start_date, end_date, categories)
 
         return rows

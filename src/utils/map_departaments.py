@@ -1,4 +1,4 @@
-categories = {
+departaments = {
     "Folha": ["departamento pessoal", "e-social"],
     "Fiscal": ["departamento fiscal"],
     "Contábil": ["departamento contábil"],

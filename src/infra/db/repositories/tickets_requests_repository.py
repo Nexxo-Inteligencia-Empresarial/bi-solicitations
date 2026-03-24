@@ -45,13 +45,14 @@ class TicketsRequestsRepository(TicketsRequestsRepositoryInterface):
         except Exception as exception:
             raise exception
 
-    def get_conclued_tickets(self, start_date, end_date):
+    def get_conclued_tickets(self, start_date, end_date, categories):
         with DBconnectionHandler() as db_connection:
             try:
                 data = db_connection.session.\
                     query(TicketsRequestsModel)\
                     .filter(
-                    TicketsRequestsModel.conclusion_date.between(start_date, end_date)
+                    TicketsRequestsModel.conclusion_date.between(start_date, end_date),
+                    TicketsRequestsModel.type.in_(categories)
                 ) \
                 .all()
                 return data

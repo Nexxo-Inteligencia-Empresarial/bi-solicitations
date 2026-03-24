@@ -5,7 +5,7 @@ from src.data.use_cases.get_last_executation import GetLastExecution
 from src.infra.db.repositories.execution_collection_repository import ExecutionCollectionRepository
 from src.infra.db.repositories.tickets_requests_repository import TicketsRequestsRepository
 from modules import Navbar, Header, AutoRefresh, Footer, StatusBarChart, StatusPieChart, TableSolicitations, AlertOutdate
-from src.utils.map_categories import categories
+from src.utils.map_departaments import departaments
 
 
 use_case = GetTickets(TicketsRequestsRepository())
@@ -26,7 +26,7 @@ def main():
     Navbar()
     Header()
     ft_dpt = st.multiselect(
-        "Filtro por departamentos", categories.keys(),
+        "Filtro por departamentos", departaments.keys(),
         placeholder="Selecione um departamento"
     )
 

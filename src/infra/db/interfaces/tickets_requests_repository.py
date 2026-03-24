@@ -14,7 +14,7 @@ class TicketsRequestsRepositoryInterface(ABC):
         pass
 
     @abstractmethod
-    def get_conclued_tickets(self,start_date, end_date) -> List[TicketsRequests]:
+    def get_conclued_tickets(self,start_date, end_date, categories) -> List[TicketsRequests]:
         pass
 
     @abstractmethod

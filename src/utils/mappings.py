@@ -1,5 +1,5 @@
 from typing import Optional, List, Tuple
-from .map_categories import categories
+from .map_departaments import departaments
 from datetime import date
 
 class Mappings:
@@ -24,7 +24,7 @@ class Mappings:
 
     @classmethod
     def classify_departaments(cls, departament):
-        for category, rules in categories.items():
+        for category, rules in departaments.items():
             if departament in rules:
                 return category
         return None
@@ -70,3 +70,7 @@ class Mappings:
             "Sistema": ticket.system,
             "Tipo": ticket.type
         }
+
+    @classmethod
+    def categories(cls):
+        return ["Afastamento","Cadastro","Férias","Geral","Rescisão","Rubricas"]
