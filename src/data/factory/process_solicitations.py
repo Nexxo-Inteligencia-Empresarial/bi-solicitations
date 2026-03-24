@@ -151,7 +151,7 @@ def process_exceded_sla(rows: List[Dict], departament_selected):
                 "Dias para a conclusão": days,
             }
 
-            if days >= 2:
+            if days > 2:
                 sla_exceeded.append(ticket_info)
 
         return sla_exceeded
