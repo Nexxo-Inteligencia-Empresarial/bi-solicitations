@@ -47,7 +47,9 @@ class EmployeesTicketsRepository(EmployeesTicketsRepositoryInterface):
                     .query(
                         func.lower(TicketsRequestsModel.responsible).label("employee")
                     )
-                    .filter(TicketsRequestsModel.responsible.isnot(None))
+                    .filter(TicketsRequestsModel.responsible.isnot(None),
+                            TicketsRequestsModel.status == "Respondida"
+                            )
                     .distinct()
                     .order_by(func.lower(TicketsRequestsModel.responsible))
                     .all()
