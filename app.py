@@ -31,7 +31,9 @@ def main():
     col1, col2 = st.columns([2, 1])
 
     with col1:
-        StatusBarChart(dataset.get_by_departament(ft_dpt))
+        data = dataset.get_by_departament(ft_dpt)
+        st.info(data)
+        StatusBarChart(data)
 
     with col2:
         StatusPieChart(dataset.get_open_tickets(ft_dpt,total=True))
