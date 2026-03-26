@@ -157,7 +157,7 @@ def process_exceded_sla(rows: List[Dict], departament_selected):
         return sla_exceeded
 
 @st.cache_data
-def process_tickets_by_create_date(rows: List[Dict], ft_dpt ):
+def process_tickets_by_create_date(rows: List[Dict]):
     datas_formatted = []
     for row in rows:
 
@@ -166,7 +166,6 @@ def process_tickets_by_create_date(rows: List[Dict], ft_dpt ):
         create_date = parse_date(row.get('create_date'))
 
         if departament is None: continue
-        if not Mappings.filter_departament(departament, ft_dpt): continue
         if  not create_date: continue
 
         formatted = {

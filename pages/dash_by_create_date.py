@@ -22,27 +22,22 @@ def main():
     Navbar()
     Header()
 
-    ft_dpt = st.multiselect(
-        "Escolha os departamentos", departaments.keys(),
-        placeholder="Selecione um departamento"
-    )
-
     col1, col2 = st.columns([1,1])
 
-
     with col1:
-        start_date = st.date_input("Data de abertura", None, format="DD/MM/YYYY" )
+        start_date = st.date_input("Data de abertura", format="DD/MM/YYYY" )
     with col2:
-        close_date = st.date_input("Data de Fechamento", None, format="DD/MM/YYYY")
+        close_date = st.date_input("Data de Fechamento", format="DD/MM/YYYY")
+
     categories_options = Mappings.categories()
     categories =  st.multiselect("Cateogrias", categories_options, default=categories_options)
 
-    render(ft_dpt, start_date, close_date, categories)
+    render(start_date, close_date, categories)
     Footer()
 
 @st.cache_resource
-def render(ft_dpt, start_date, close_date, categories):
-    datas = dataset.get_by_create_date(ft_dpt,start_date,close_date,categories)
+def render(start_date, close_date, categories):
+    datas = dataset.get_by_create_date(start_date, close_date, categories)
     st.metric("Quantidade de solicitações", len(datas))
     st.dataframe(datas)
 

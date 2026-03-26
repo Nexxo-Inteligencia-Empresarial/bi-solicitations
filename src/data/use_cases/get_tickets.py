@@ -33,7 +33,7 @@ class GetTickets():
 
         return process_tickets(rows, data_expired, ft_dpt)
 
-    def get_by_create_date(self, ft_dpt:Optional[List[str]] = None, start_date: Optional[date] = None, end_date: Optional[date] = None, categories: Optional[List[str]] = None):
+    def get_by_create_date(self, start_date: Optional[date] = None, end_date: Optional[date] = None, categories: Optional[List[str]] = None):
         if start_date is None or end_date is None or start_date > end_date:
             today = date.today()
             start_date, end_date = today, today
@@ -45,7 +45,7 @@ class GetTickets():
         rows = self.__repository.get_tickets_by_create_date(start_date, end_date, categories)
         datas =[ row.to_dict() for row in rows]
 
-        return process_tickets_by_create_date(datas, ft_dpt)
+        return process_tickets_by_create_date(datas)
 
     def __today(self):
 

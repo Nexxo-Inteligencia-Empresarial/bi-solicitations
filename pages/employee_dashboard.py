@@ -66,10 +66,6 @@ def main():
         end_date.strftime("%Y-%m-%d") if start_date and end_date else None
     )
 
-    # -----------------------------
-    # BUSCA DOS DADOS
-    # -----------------------------
-
     if not selected_employees:
         result_data = use_case.get_tickets(
             employee=None,
