@@ -32,7 +32,6 @@ def main():
 
     with col1:
         data = dataset.get_by_departament(ft_dpt)
-        st.info(data)
         StatusBarChart(data)
 
     with col2:
@@ -48,7 +47,7 @@ def main():
 
     TableSolicitations(dataset.get_open_tickets(ft_dpt, ft_stts))
 
-    for system, last_execution in dataset_execution:
+    for system, last_execution in dataset_execution.get():
         st.markdown(f"""
             <div style="text-align: center; font-size: 16px;">
                 <strong>{system.capitalize()}</strong>: {last_execution.strftime('%d/%m/%Y %H:%M:%S')}
