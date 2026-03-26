@@ -3,12 +3,10 @@ import altair as alt
 import streamlit as st
 
 from src.utils.mappings import Mappings
-from src.data.use_cases.interface.get_tickets import GetTickets
 
 class StatusBarChart:
 
-    def __init__(self, use_case: GetTickets, ft_dpt):
-        datas = use_case.get_by_departament(ft_dpt)
+    def __init__(self, datas):
         self.__render(datas)
 
     def __render(self,datas):

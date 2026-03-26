@@ -4,7 +4,7 @@ import streamlit as st
 
 from src.utils.mappings import Mappings
 
-class StatusChart:
+class StatusChart():
 
     def __init__(self, data_items: list):
         self.__render(data_items)

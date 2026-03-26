@@ -3,12 +3,10 @@ from uuid import uuid4
 import streamlit as st
 
 from src.utils.mappings import Mappings
-from src.data.use_cases.interface.get_tickets import GetTickets
 
-class StatusPieChart:
+class StatusPieChart():
 
-    def __init__(self, use_case: GetTickets, ft_dpt):
-        datas = use_case.get_open_tickets(ft_dpt,total=True)
+    def __init__(self, datas):
         self.__render(datas)
 
     def __render(self, datas):

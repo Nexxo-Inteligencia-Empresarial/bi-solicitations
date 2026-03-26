@@ -1,9 +1,8 @@
 from collections import defaultdict
 
-from src.data.use_cases.interface.get_employees_tickets import GetEmployeeticketsInterface
 from src.infra.db.interfaces.employees_tickets_repository import EmployeesTicketsRepositoryInterface
 
-class GetEmployeetickets(GetEmployeeticketsInterface):
+class GetEmployeetickets():
 
     def __init__(self, repository: EmployeesTicketsRepositoryInterface):
         self.__repository = repository

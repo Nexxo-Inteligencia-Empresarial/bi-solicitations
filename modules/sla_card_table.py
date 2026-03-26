@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 
 from src.utils.mappings import Mappings
-from src.data.use_cases.interface.get_tickets import GetTickets
 
 
 class SlaCardTable:

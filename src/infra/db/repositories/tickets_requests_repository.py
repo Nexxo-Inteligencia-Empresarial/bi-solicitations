@@ -110,6 +110,23 @@ class TicketsRequestsRepository(TicketsRequestsRepositoryInterface):
         except Exception as exception:
             raise exception
 
+    def get_tickets_by_create_date(self, start_date, end_date, categories):
+        with DBconnectionHandler() as db_connection:
+            try:
+                data = db_connection.session.\
+                    query(TicketsRequestsModel)\
+                    .filter(
+                    TicketsRequestsModel.create_date >= start_date,
+                    TicketsRequestsModel.create_date < end_date,
+                    TicketsRequestsModel.type.in_(categories),
+                    TicketsRequestsModel.system == "onvio"
+                ) \
+                .all()
+                return data
+
+            except Exception as exception:
+                raise exception
+
     def __deadline(self):
         br_tz = pytz.timezone("America/Sao_Paulo")
         now = datetime.now(br_tz)

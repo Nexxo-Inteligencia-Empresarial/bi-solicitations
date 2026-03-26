@@ -1,9 +1,6 @@
-from datetime import datetime, date
+from datetime import date, time
 from typing import Optional, List
-from collections import Counter
-import pytz
 
-from src.data.use_cases.interface.get_tickets import GetTickets as GetTicketsInterface
 from src.infra.db.interfaces.tickets_requests_repository import TicketsRequestsRepositoryInterface
 from src.data.factory.process_solicitations import *
 
@@ -37,5 +34,4 @@ class GetTicketsSla():
         end_date = end_date.strftime("%Y-%m-%d")
 
         rows = self.__repository.get_conclued_tickets(start_date, end_date, categories)
-
         return rows

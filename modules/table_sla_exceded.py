@@ -1,6 +1,5 @@
 import streamlit as st
 
-from src.data.use_cases.interface.get_tickets import GetTickets
 class TableSlaExceded():
 
     def __init__(self, datas):

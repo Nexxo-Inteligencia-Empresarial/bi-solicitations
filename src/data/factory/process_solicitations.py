@@ -61,7 +61,7 @@ def process_open_tickets(rows: List[Dict], ft_dpt, ft_stts):
         if not Mappings.filter_status(row.get('status'), ft_stts):
             continue
 
-        ticket_info = {
+        formatted = {
             "ID": row.get('ticket_id'),
             "Departamento": departament,
             "Status": row.get('status'),
@@ -72,7 +72,7 @@ def process_open_tickets(rows: List[Dict], ft_dpt, ft_stts):
             "Tipo": row.get('type'),
         }
 
-        datas.append(ticket_info)
+        datas.append(formatted)
     return datas
 
 @st.cache_data
@@ -141,7 +141,7 @@ def process_exceded_sla(rows: List[Dict], departament_selected):
 
             days = (conclusion_date - create_date).days
 
-            ticket_info = {
+            formatted = {
                 "ID": row.get('ticket_id'),
                 "Departamento": row.get('departament'),
                 "Sistema": row.get('system'),
@@ -152,9 +152,37 @@ def process_exceded_sla(rows: List[Dict], departament_selected):
             }
 
             if days > 2:
-                sla_exceeded.append(ticket_info)
+                sla_exceeded.append(formatted)
 
         return sla_exceeded
+
+@st.cache_data
+def process_tickets_by_create_date(rows: List[Dict], ft_dpt ):
+    datas_formatted = []
+    for row in rows:
+
+        departament = Mappings.classify_departaments(row.get('departament').lower())
+        conclusion_date = parse_date(row.get('conclusion_date'))
+        create_date = parse_date(row.get('create_date'))
+
+        if departament is None: continue
+        if not Mappings.filter_departament(departament, ft_dpt): continue
+        if  not create_date: continue
+
+        formatted = {
+                "ID": row.get('ticket_id'),
+                "Responsável" : row.get('responsible'),
+                "Departamento": row.get('departament'),
+                "Sistema": row.get('system'),
+                "Status": row.get('status'),
+                "Tipo": row.get('type'),
+                "Data de criação": create_date,
+                "Data de conclusão": conclusion_date,
+            }
+        datas_formatted.append(formatted)
+
+    return datas_formatted
+
 
 def parse_date(value):
     if isinstance(value, str):

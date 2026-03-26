@@ -20,3 +20,7 @@ class TicketsRequestsRepositoryInterface(ABC):
     @abstractmethod
     def get_open_tickets(self, today: str) -> List[TicketsRequests]:
         pass
+
+    @abstractmethod
+    def get_tickets_by_create_date(self, start_date, end_date, categories):
+        pass

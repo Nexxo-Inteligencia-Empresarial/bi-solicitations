@@ -1,15 +1,15 @@
 import streamlit as st
 
-from src.data.use_cases.get_tickets import GetTickets
-from src.data.use_cases.get_last_executation import GetLastExecution
+from src.data.use_cases.get_tickets import GetTickets as Dataset
+from src.data.use_cases.get_last_executation import GetLastExecution as DatasetExecution
 from src.infra.db.repositories.execution_collection_repository import ExecutionCollectionRepository
 from src.infra.db.repositories.tickets_requests_repository import TicketsRequestsRepository
 from modules import Navbar, Header, AutoRefresh, Footer, StatusBarChart, StatusPieChart, TableSolicitations, AlertOutdate
 from src.utils.map_departaments import departaments
 
 
-use_case = GetTickets(TicketsRequestsRepository())
-use_case_execution = GetLastExecution(ExecutionCollectionRepository())
+dataset = Dataset(TicketsRequestsRepository())
+dataset_execution = DatasetExecution(ExecutionCollectionRepository())
 
 st.set_page_config(
     page_title="BI Solicitations",
@@ -18,10 +18,8 @@ st.set_page_config(
 
 st.logo(image='images/logo.png')
 
-datas_execution = use_case_execution.get()
-
 def main():
-    AlertOutdate(datas_execution)
+    AlertOutdate(dataset_execution.get())
     AutoRefresh()
     Navbar()
     Header()
@@ -33,11 +31,10 @@ def main():
     col1, col2 = st.columns([2, 1])
 
     with col1:
-        StatusBarChart(use_case, ft_dpt)
+        StatusBarChart(dataset.get_by_departament(ft_dpt))
 
     with col2:
-        StatusPieChart(use_case, ft_dpt)
-
+        StatusPieChart(dataset.get_open_tickets(ft_dpt,total=True))
         col1, col2 = st.columns([1,1])
 
     ft_stts_row =  st.columns(3)
@@ -47,9 +44,9 @@ def main():
             placeholder="Selecione um Status"
         )
 
-    TableSolicitations(use_case, ft_dpt, ft_stts)
+    TableSolicitations(dataset.get_open_tickets(ft_dpt, ft_stts))
 
-    for system, last_execution in datas_execution:
+    for system, last_execution in dataset_execution:
         st.markdown(f"""
             <div style="text-align: center; font-size: 16px;">
                 <strong>{system.capitalize()}</strong>: {last_execution.strftime('%d/%m/%Y %H:%M:%S')}

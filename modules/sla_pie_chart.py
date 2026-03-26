@@ -2,8 +2,6 @@ import streamlit as st
 import plotly.graph_objects as go
 from uuid import uuid4
 
-from src.data.use_cases.interface.get_tickets import GetTickets
-
 class SlaPieChart():
 
     def __init__(self,datas):

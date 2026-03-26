@@ -2,7 +2,6 @@ import streamlit as st
 import plotly.graph_objects as go
 
 from src.utils.mappings import Mappings
-from src.data.use_cases.interface.get_tickets import GetTickets
 
 class SlaBarChart:
 
