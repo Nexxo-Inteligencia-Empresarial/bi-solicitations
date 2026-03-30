@@ -21,7 +21,6 @@ class GetTickets():
             return Counter(ticket['Status'] for ticket in open_tickets)
         return process_open_tickets(rows, ft_dpt, ft_stts)
 
-
     def get_by_departament(self, ft_dpt:Optional[List[str]] = None):
 
         today = self.__today()
