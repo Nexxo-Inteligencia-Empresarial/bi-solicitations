@@ -7,7 +7,6 @@ from src.infra.db.repositories.tickets_requests_repository import TicketsRequest
 from modules import Navbar, Header, AutoRefresh, Footer, StatusBarChart, StatusPieChart, TableSolicitations, AlertOutdate
 from src.utils.map_departaments import departaments
 
-
 dataset = Dataset(TicketsRequestsRepository())
 dataset_execution = DatasetExecution(ExecutionCollectionRepository())
 
