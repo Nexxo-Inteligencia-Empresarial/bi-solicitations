@@ -1,4 +1,4 @@
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 from collections import defaultdict
 from typing import List, Dict
 
@@ -175,7 +175,7 @@ def process_tickets_by_create_date(rows: List[Dict]):
                 "Sistema": row.get('system'),
                 "Status": row.get('status'),
                 "Tipo": row.get('type'),
-                "Data de conclusão": conclusion_date,
+                "Data de conclusão": conclusion_date - timedelta(hours=3) if conclusion_date else None,
             }
         datas_formatted.append(formatted)
 
