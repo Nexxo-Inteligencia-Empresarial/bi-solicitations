@@ -163,7 +163,7 @@ def process_tickets_by_create_date(rows: List[Dict]):
 
         departament = Mappings.classify_departaments(row.get('departament').lower())
         conclusion_date = parse_date(row.get('conclusion_date'))
-        create_date = parse_date(row.get('create_date'))
+        create_date = row.get('create_date')
 
         if departament is None: continue
         if  not create_date: continue
@@ -171,11 +171,10 @@ def process_tickets_by_create_date(rows: List[Dict]):
         formatted = {
                 "ID": row.get('ticket_id'),
                 "Responsável" : row.get('responsible'),
-                "Departamento": row.get('departament'),
+                "Data de criação": create_date,
                 "Sistema": row.get('system'),
                 "Status": row.get('status'),
                 "Tipo": row.get('type'),
-                "Data de criação": create_date,
                 "Data de conclusão": conclusion_date,
             }
         datas_formatted.append(formatted)

@@ -38,9 +38,14 @@ class GetTickets():
             today = date.today()
             start_date, end_date = today, today
 
-        start_date = start_date.strftime("%Y-%m-%d")
-        end_date = end_date + timedelta(1)
-        end_date = end_date.strftime("%Y-%m-%d")
+        start_date = datetime.combine(start_date, datetime.min.time())
+        end_date = datetime.combine(end_date, datetime.min.time())
+
+        start_date = start_date - timedelta(days=1) + timedelta(hours=18)
+        start_date = start_date.strftime("%Y-%m-%d %H:%M:%S")
+
+        end_date = end_date + timedelta(hours=18)
+        end_date = end_date.strftime("%Y-%m-%d %H:%M:%S")
 
         rows = self.__repository.get_tickets_by_create_date(start_date, end_date, categories)
         datas =[ row.to_dict() for row in rows]
