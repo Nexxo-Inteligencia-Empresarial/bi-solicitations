@@ -165,7 +165,7 @@ def process_tickets_by_create_date(rows: List[Dict]):
         conclusion_date = parse_date(row.get('conclusion_date'))
         create_date = row.get('create_date')
 
-        if departament is None: continue
+        if not departament: continue
         if  not create_date: continue
 
         formatted = {
