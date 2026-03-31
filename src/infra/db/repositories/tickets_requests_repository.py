@@ -1,7 +1,7 @@
 from datetime import datetime
 import pytz
 
-from sqlalchemy import func, or_, and_, cast, Date
+from sqlalchemy import DateTime, func, or_, and_, cast, Date
 
 from src.infra.db.settings.conection import DBconnectionHandler
 from src.infra.db.entities.tickets_requests import TicketsRequests as TicketsRequestsModel
@@ -116,8 +116,8 @@ class TicketsRequestsRepository(TicketsRequestsRepositoryInterface):
                 data = db_connection.session.\
                     query(TicketsRequestsModel)\
                     .filter(
-                    TicketsRequestsModel.create_date >= start_date,
-                    TicketsRequestsModel.create_date < end_date,
+                    cast(TicketsRequestsModel.create_date, DateTime) >= start_date,
+                    cast(TicketsRequestsModel.create_date, DateTime) < end_date,
                     TicketsRequestsModel.type.in_(categories),
                     TicketsRequestsModel.system == "onvio"
                 ) \

@@ -171,11 +171,11 @@ def process_tickets_by_create_date(rows: List[Dict]):
         formatted = {
                 "ID": row.get('ticket_id'),
                 "Responsável" : row.get('responsible'),
-                "Data de criação": create_date,
+                "Data de criação": to_timezeone(create_date) if create_date else None,
                 "Sistema": row.get('system'),
                 "Status": row.get('status'),
                 "Tipo": row.get('type'),
-                "Data de conclusão": conclusion_date - timedelta(hours=3) if conclusion_date else None,
+                "Data de conclusão": conclusion_date.strftime("%d/%m/%Y") if conclusion_date else None,
             }
         datas_formatted.append(formatted)
 
@@ -188,3 +188,8 @@ def parse_date(value):
     if isinstance(value, datetime):
         return value.date()
     return value
+
+def to_timezeone(value):
+    dt = datetime.fromisoformat(value)
+    dt = dt - timedelta(hours=3)
+    return dt.strftime("%d/%m/%Y %H:%M")
