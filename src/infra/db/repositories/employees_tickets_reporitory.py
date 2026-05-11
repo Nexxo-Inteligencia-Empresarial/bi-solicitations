@@ -1,4 +1,4 @@
-from sqlalchemy import and_, func
+from sqlalchemy import DateTime, and_, cast, func
 
 from src.infra.db.entities.tickets_requests import TicketsRequests as TicketsRequestsModel
 from src.infra.db.interfaces.employees_tickets_repository import EmployeesTicketsRepositoryInterface
@@ -27,8 +27,8 @@ class EmployeesTicketsRepository(EmployeesTicketsRepositoryInterface):
                 if start_date and end_date:
                     query = query.filter(
                         and_(
-                            TicketsRequestsModel.conclusion_date >= start_date,
-                            TicketsRequestsModel.conclusion_date <= end_date
+                            cast(TicketsRequestsModel.conclusion_date, DateTime) > start_date,
+                            cast(TicketsRequestsModel.conclusion_date, DateTime) < end_date,
                         )
                     )
 

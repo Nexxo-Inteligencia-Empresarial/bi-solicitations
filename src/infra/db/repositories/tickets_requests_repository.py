@@ -17,30 +17,24 @@ class TicketsRequestsRepository(TicketsRequestsRepositoryInterface):
                     TicketsRequestsModel.status,
                     func.lower(TicketsRequestsModel.departament).label("departament"),
                     func.count(TicketsRequestsModel.id)
-                ).filter(or_(
-                    and_(
-                        TicketsRequestsModel.status != "Respondida",
-                        TicketsRequestsModel.due_date <= today
-                    ),
-                    and_(
-                        TicketsRequestsModel.status != "Respondida",
-                        TicketsRequestsModel.due_date == None
-                    )
-                )).filter(
+                ).filter(
                     or_(
                         and_(
-                            TicketsRequestsModel.create_date.contains(' '),
-                            TicketsRequestsModel.create_date <= deadline.strftime('%Y-%m-%d %H:%M')
+                            TicketsRequestsModel.status != "Respondida",
+                            TicketsRequestsModel.due_date <= today
                         ),
                         and_(
-                            ~TicketsRequestsModel.create_date.contains(' '),
-                            cast(TicketsRequestsModel.create_date, Date) <= deadline.date()
+                            TicketsRequestsModel.status != "Respondida",
+                            TicketsRequestsModel.due_date == None
                         )
                     )
+                ).filter(
+                    TicketsRequestsModel.create_date <= deadline
                 ).group_by(
                     func.lower(TicketsRequestsModel.departament),
                     TicketsRequestsModel.status
                 ).all()
+
                 return data
         except Exception as exception:
             raise exception
@@ -62,32 +56,28 @@ class TicketsRequestsRepository(TicketsRequestsRepositoryInterface):
 
     def get_open_tickets(self, today: str):
         deadline = self.__deadline()
+
         try:
             with DBconnectionHandler() as db_connection:
                 data = db_connection.session.query(
                     TicketsRequestsModel
-                ).filter(or_(
-                    and_(
-                        TicketsRequestsModel.status != "Respondida",
-                        TicketsRequestsModel.due_date <= today
-                    ),
-                    and_(
-                        TicketsRequestsModel.status != "Respondida",
-                        TicketsRequestsModel.due_date == None
-                    )
-                )).filter(
+                ).filter(
                     or_(
                         and_(
-                            TicketsRequestsModel.create_date.contains(' '),
-                            TicketsRequestsModel.create_date <= deadline.strftime('%Y-%m-%d %H:%M')
+                            TicketsRequestsModel.status != "Respondida",
+                            TicketsRequestsModel.due_date <= today
                         ),
                         and_(
-                            ~TicketsRequestsModel.create_date.contains(' '),
-                            cast(TicketsRequestsModel.create_date, Date) <= deadline.date()
+                            TicketsRequestsModel.status != "Respondida",
+                            TicketsRequestsModel.due_date.is_(None)
                         )
                     )
+                ).filter(
+                    TicketsRequestsModel.create_date <= deadline
                 ).all()
+
                 return data
+
         except Exception as exception:
             raise exception
 

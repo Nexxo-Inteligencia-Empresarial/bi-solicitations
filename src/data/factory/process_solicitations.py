@@ -42,7 +42,7 @@ def process_tickets(rows, data_expired, ft_dpt):
 def process_open_tickets(rows: List[Dict], ft_dpt, ft_stts):
     datas = []
     for row in rows:
-        create_date = parse_date(row.get("create_date"))
+        create_date = row.get("create_date")
         departament = Mappings.classify_departaments(row.get("departament").lower())
 
         if departament is None:
@@ -53,7 +53,7 @@ def process_open_tickets(rows: List[Dict], ft_dpt, ft_stts):
 
         today = date.today()
 
-        due_date = datetime.fromisoformat(row.get("due_date")).date() if row.get("due_date") else None
+        due_date = row.get("due_date") if row.get("due_date") else None
 
         if due_date and due_date <  today and row.get('status') == 'Resolvendo':
             row['status'] = "Atrasada"
@@ -82,17 +82,17 @@ def process_sla_per_month(rows: List[Dict], departament_selected):
     for row in rows:
 
         departament = Mappings.classify_departaments(row.get('departament').lower())
-        conclusion_date = parse_date(row.get('conclusion_date'))
-        create_date = parse_date(row.get('create_date'))
+        conclusion_date = row.get('conclusion_date')
+        create_date = row.get('create_date')
+        delivery_time = row.get('delivery_time')
 
         if departament is None: continue
         if not Mappings.filter_departament(departament, departament_selected): continue
         if  not create_date or not conclusion_date: continue
 
-        days = (conclusion_date - create_date).days
         month_solicitation = conclusion_date.month
 
-        if days <= 2:
+        if conclusion_date <= delivery_time:
             months_sla[month_solicitation]["Dentro do SLA"] += 1
         else:
             months_sla[month_solicitation]["Fora do SLA"] += 1
@@ -106,16 +106,15 @@ def process_general_sla(rows: List[Dict], departament_selected):
         for row in rows:
 
             departament = Mappings.classify_departaments(row.get('departament').lower())
-            conclusion_date = parse_date(row.get('conclusion_date'))
-            create_date = parse_date(row.get('create_date'))
+            conclusion_date = row.get('conclusion_date')
+            create_date = row.get('create_date')
+            delivery_time = row.get('delivery_time')
 
             if departament is None: continue
             if not Mappings.filter_departament(departament, departament_selected): continue
             if  not create_date or not conclusion_date: continue
 
-            days = (conclusion_date - create_date).days
-
-            if days <= 2:
+            if conclusion_date <= delivery_time:
                 status_totals["Dentro do SLA"] += 1
             else:
                 status_totals["Fora do SLA"] += 1
@@ -132,14 +131,15 @@ def process_exceded_sla(rows: List[Dict], departament_selected):
         for row in rows:
 
             departament = Mappings.classify_departaments(row.get('departament').lower())
-            conclusion_date = parse_date(row.get('conclusion_date'))
-            create_date = parse_date(row.get('create_date'))
+            conclusion_date = row.get('conclusion_date')
+            create_date = row.get('create_date')
+            delivery_time = row.get('delivery_time')
 
             if departament is None: continue
             if not Mappings.filter_departament(departament, departament_selected): continue
             if  not create_date or not conclusion_date: continue
 
-            days = (conclusion_date - create_date).days
+            days = (create_date - conclusion_date).days
 
             formatted = {
                 "ID": row.get('ticket_id'),
@@ -148,10 +148,11 @@ def process_exceded_sla(rows: List[Dict], departament_selected):
                 "Tipo": row.get('type'),
                 "Data de criação": create_date,
                 "Data de conclusão": conclusion_date,
-                "Dias para a conclusão": days,
+                "Data do SLA": delivery_time,
+                "Dias para a conclusão": days * -1
             }
 
-            if days > 2:
+            if conclusion_date > delivery_time:
                 sla_exceeded.append(formatted)
 
         return sla_exceeded
@@ -162,7 +163,7 @@ def process_tickets_by_create_date(rows: List[Dict]):
     for row in rows:
 
         departament = Mappings.classify_departaments(row.get('departament').lower())
-        conclusion_date = parse_date(row.get('conclusion_date'))
+        conclusion_date = row.get('conclusion_date')
         create_date = row.get('create_date')
 
         if not departament: continue
@@ -171,7 +172,7 @@ def process_tickets_by_create_date(rows: List[Dict]):
         formatted = {
                 "ID": row.get('ticket_id'),
                 "Responsável" : row.get('responsible'),
-                "Data de criação": to_timezeone(create_date) if create_date else None,
+                "Data de criação": create_date,
                 "Sistema": row.get('system'),
                 "Status": row.get('status'),
                 "Tipo": row.get('type'),
@@ -181,15 +182,16 @@ def process_tickets_by_create_date(rows: List[Dict]):
 
     return datas_formatted
 
+def process_tickets_by_employee(datas):
+    result = defaultdict(lambda: {
+        "solicitações": [],
+        "total": 0
+    })
 
-def parse_date(value):
-    if isinstance(value, str):
-        return datetime.fromisoformat(value).date()
-    if isinstance(value, datetime):
-        return value.date()
-    return value
+    for ticket in datas:
+        employee_name = ticket.responsible or "Não informado"
 
-def to_timezeone(value):
-    dt = datetime.fromisoformat(value)
-    dt = dt - timedelta(hours=3)
-    return dt.strftime("%d/%m/%Y %H:%M")
+        result[employee_name]["solicitações"].append(ticket)
+        result[employee_name]["total"] += 1
+
+    return result

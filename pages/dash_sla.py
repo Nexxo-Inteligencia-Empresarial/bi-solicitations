@@ -37,7 +37,7 @@ def main():
     with col2:
         close_date = st.date_input("Data de Fechamento", None, format="DD/MM/YYYY")
     categories_options = Mappings.categories()
-    categories =  st.multiselect("Cateogrias", categories_options, default=categories_options)
+    categories =  st.multiselect("Cateogrias", categories_options, default=[])
 
     render(ft_dpt, start_date, close_date, categories)
     Footer()
@@ -45,7 +45,8 @@ def main():
 @st.cache_resource
 def render(ft_dpt, start_date, close_date, categories):
 
-
+    if not categories:
+        categories = Mappings.categories()
 
     col_graph1, col_graph2 = st.columns([2, 1])
 

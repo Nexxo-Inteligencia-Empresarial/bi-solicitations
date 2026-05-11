@@ -30,13 +30,17 @@ def main():
         close_date = st.date_input("Data de Fechamento", format="DD/MM/YYYY")
 
     categories_options = Mappings.categories()
-    categories =  st.multiselect("Cateogrias", categories_options, default=categories_options)
+    categories =  st.multiselect("Cateogrias", categories_options, default=[])
 
     render(start_date, close_date, categories)
     Footer()
 
 @st.cache_resource
 def render(start_date, close_date, categories):
+
+    if not categories:
+        categories = Mappings.categories()
+
     datas = dataset.get_by_create_date(start_date, close_date, categories)
     st.metric("Quantidade de solicitações", len(datas))
     st.dataframe(datas)
