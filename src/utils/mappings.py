@@ -22,9 +22,10 @@ class Mappings:
         return months if not number else months[number]
 
     @classmethod
-    def classify_departaments(cls, departament):
+    def classify_departaments(cls, departament:str):
+        departament = departament.title()
         dpt = departaments.get(departament)
-        return dpt if dpt else None
+        return departament if dpt else None
 
     @classmethod
     def filter_departament(cls, departament: str, selected: Optional[List[str]]) -> bool:
