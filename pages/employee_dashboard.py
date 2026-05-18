@@ -58,19 +58,11 @@ def main():
             )
 
 
-    start_date_filter = (
-        start_date.strftime("%Y-%m-%d") if start_date and end_date else None
-    )
-
-    end_date_filter = (
-        end_date.strftime("%Y-%m-%d") if start_date and end_date else None
-    )
-
     if not selected_employees:
         result_data = use_case.get_tickets(
             employee=None,
-            start_date=start_date_filter,
-            end_date=end_date_filter
+            start_date=start_date,
+            end_date=end_date
         )
 
     else:
@@ -79,10 +71,9 @@ def main():
         for employee in selected_employees:
             data = use_case.get_tickets(
                 employee=employee.lower(),
-                start_date=start_date_filter,
-                end_date=end_date_filter
+                start_date=start_date,
+                end_date=end_date
             )
-
             result_data.update(data)
 
 

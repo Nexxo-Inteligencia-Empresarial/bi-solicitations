@@ -1,6 +1,5 @@
-from typing import Optional, List, Tuple
+from typing import Optional, List
 from .map_departaments import departaments
-from datetime import date
 
 class Mappings:
 
@@ -24,10 +23,8 @@ class Mappings:
 
     @classmethod
     def classify_departaments(cls, departament):
-        for category, rules in departaments.items():
-            if departament in rules:
-                return category
-        return None
+        dpt = departaments.get(departament)
+        return dpt if dpt else None
 
     @classmethod
     def filter_departament(cls, departament: str, selected: Optional[List[str]]) -> bool:
@@ -73,4 +70,33 @@ class Mappings:
 
     @classmethod
     def categories(cls):
-        return ["Afastamento","Cadastro","Férias","Geral","Rescisão","Rubricas"]
+        return [
+                "Alteração de CBO/Função",
+                "Alteração de contrato de trabalho",
+                "Analisar Termo de Intimação",
+                "Análise Termo de Notificação",
+                "Dúvidas Gerais",
+                "Enviar Chave do FGTS",
+                "Extrato Analítico",
+                "Lançamento de Atestado",
+                "Lançamento de Falta",
+                "Lançamento de Pensão Alimentícia",
+                "Projeção de Custo",
+                "Simulação de Férias",
+                "Simulação de Rescisão",
+                "Solicitar PERDCOMP(GERAL)",
+                "Cálculo de Férias(GERAL)",
+                "Cálculo de Rescisão",
+                "Transferência de Empregados(GERAL)",
+                "Alteração de data Aviso Prévio",
+                "Aviso de Férias",
+                "Aviso de Rescisão",
+                "Envio de Contracheque",
+                "Envio de Ficha de Registro",
+                "Exclusão de Admissão",
+                "Levantamento de FGTS",
+                "Análise de Escala de Trabalho",
+                "Lançamento de Rubricas",
+                "Admissão",
+                "Afastamento"
+            ]
