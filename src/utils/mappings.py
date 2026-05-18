@@ -1,6 +1,5 @@
-from typing import Optional, List, Tuple
+from typing import Optional, List
 from .map_departaments import departaments
-from datetime import date
 
 class Mappings:
 
