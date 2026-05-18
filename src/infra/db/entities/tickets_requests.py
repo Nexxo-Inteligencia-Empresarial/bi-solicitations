@@ -37,4 +37,5 @@ class TicketsRequests(Base):
             "conclusion_date": self.conclusion_date,
             "responsible": self.responsible,
             "delivery_time": self.delivery_time,
+            "reopen": self.reopen
         }

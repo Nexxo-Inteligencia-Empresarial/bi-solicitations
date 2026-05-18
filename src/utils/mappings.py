@@ -66,7 +66,8 @@ class Mappings:
             "Criado em": ticket.create_date,
             "Concluído em": ticket.conclusion_date,
             "Sistema": ticket.system,
-            "Tipo": ticket.type
+            "Tipo": ticket.type,
+            "Reaberta": ticket.reopen
         }
 
     @classmethod
