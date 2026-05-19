@@ -26,7 +26,7 @@ class Mappings:
         departament = departament.title()
         dpt = departaments.get(departament)
 
-        if departament: return departament
+        if dpt: return departament
         if departament == "Departamento Pessoal": return "Folha"
 
         return None
