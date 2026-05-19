@@ -25,7 +25,11 @@ class Mappings:
     def classify_departaments(cls, departament:str):
         departament = departament.title()
         dpt = departaments.get(departament)
-        return departament if dpt else None
+
+        if departament: return departament
+        if departament == "Departamento Pessoal": return "Folha"
+
+        return None
 
     @classmethod
     def filter_departament(cls, departament: str, selected: Optional[List[str]]) -> bool:
