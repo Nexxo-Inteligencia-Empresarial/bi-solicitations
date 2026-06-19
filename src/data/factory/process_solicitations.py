@@ -67,6 +67,7 @@ def process_open_tickets(rows: List[Dict], ft_dpt, ft_stts):
             "Status": row.get('status'),
             "Vencimento": row.get('due_date'),
             "Criação": create_date,
+            'Renegociações': row.get('renegotiations'),
             "Responsável" : row.get('responsible'),
             "Sistema": row.get('system'),
             "Tipo": row.get('type'),
