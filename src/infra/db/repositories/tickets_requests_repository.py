@@ -2,6 +2,7 @@ from datetime import datetime
 import pytz
 
 from sqlalchemy import DateTime, func, or_, and_, cast, Date
+from sqlalchemy.orm import aliased
 
 from src.infra.db.settings.conection import DBconnectionHandler
 from src.infra.db.entities.tickets_requests import TicketsRequests as TicketsRequestsModel
@@ -80,6 +81,38 @@ class TicketsRequestsRepository(TicketsRequestsRepositoryInterface):
 
         except Exception as exception:
             raise exception
+
+    def get_tickets_with_renegotiations(self):
+        with DBconnectionHandler() as db_connection:
+            try:
+                tickets_alias = aliased(TicketsRequestsModel)
+
+                max_renegotiations = (
+                    db_connection.session.query(
+                        tickets_alias.ticket_id.label("ticket_id"),
+                        func.max(tickets_alias.renegotiations).label("max_renegotiations")
+                    )
+                    .group_by(tickets_alias.ticket_id)
+                    .subquery()
+                )
+
+                data = (
+                    db_connection.session.query(TicketsRequestsModel)
+                    .join(
+                        max_renegotiations,
+                        and_(
+                            TicketsRequestsModel.ticket_id == max_renegotiations.c.ticket_id,
+                            TicketsRequestsModel.renegotiations == max_renegotiations.c.max_renegotiations
+                        )
+                    )
+                    .filter(TicketsRequestsModel.renegotiations > 2)
+                    .all()
+                )
+
+                return data
+
+            except Exception as exception:
+                raise exception
 
     def get_expired_tickets(self, today: str):
         try:

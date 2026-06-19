@@ -9,3 +9,4 @@ def Navbar():
         st.page_link('pages/dash_sla.py', label='SLA')
         st.page_link('pages/employee_dashboard.py', label= 'OS - Responsáveis')
         st.page_link('pages/dash_by_create_date.py', label='OS - Abertura')
+        st.page_link('pages/dash_renegotiations.py', label='Renegociações')

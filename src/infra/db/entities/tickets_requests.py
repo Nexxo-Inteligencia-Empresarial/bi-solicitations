@@ -22,7 +22,7 @@ class TicketsRequests(Base):
     shared = Column(Boolean, nullable=False, default=False)
     delivery_time = Column(String(16), nullable=True)
     reopen = Column(Integer, nullable=False)
-
+    renegotiations = Column(Integer, nullable=True)
 
     def to_dict(self):
         return {
@@ -37,5 +37,6 @@ class TicketsRequests(Base):
             "conclusion_date": self.conclusion_date,
             "responsible": self.responsible,
             "delivery_time": self.delivery_time,
-            "reopen": self.reopen
+            "reopen": self.reopen,
+            "renegotiations": self.renegotiations
         }

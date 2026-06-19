@@ -45,6 +45,12 @@ class GetTickets():
 
         return process_tickets_by_create_date(datas)
 
+    def get_with_renegotiations(self, ft_dpt: Optional[List[str]] = None, ft_stts: Optional[List[str]] = None):
+        rows = self.__repository.get_tickets_with_renegotiations()
+        datas = [row.to_dict() for row in rows]
+
+        return process_renegotiations_tickets(datas, ft_dpt, ft_stts)
+
     def __today(self):
 
         brazil_timezone = pytz.timezone('America/Sao_Paulo')

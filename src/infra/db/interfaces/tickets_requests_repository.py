@@ -22,5 +22,9 @@ class TicketsRequestsRepositoryInterface(ABC):
         pass
 
     @abstractmethod
+    def get_tickets_with_renegotiations(self) -> List[TicketsRequests]:
+        pass
+
+    @abstractmethod
     def get_tickets_by_create_date(self, start_date, end_date, categories):
         pass

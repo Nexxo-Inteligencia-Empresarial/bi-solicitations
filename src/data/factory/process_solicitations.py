@@ -182,6 +182,72 @@ def process_tickets_by_create_date(rows: List[Dict]):
 
     return datas_formatted
 
+@st.cache_data
+def process_renegotiations_tickets(rows, ft_dpt, ft_stts):
+    datas = []
+
+    for row in rows:
+        departament = row.get('departament') or ''
+        departament = departament.lower()
+        departament = Mappings.classify_departaments(departament)
+
+        if departament is None:
+            continue
+
+        if not Mappings.filter_departament(departament, ft_dpt):
+            continue
+
+        if not Mappings.filter_status(row.get('status'), ft_stts):
+            continue
+
+        formatted = {
+            'ID': row.get('ticket_id'),
+            'Departamento': departament,
+            'Status': row.get('status'),
+            'Renegociações': row.get('renegotiations'),
+            'Criado em': row.get('create_date'),
+            'Vencimento': row.get('due_date'),
+            'Responsável': row.get('responsible'),
+            'Sistema': row.get('system'),
+            'Tipo': row.get('type'),
+        }
+
+        datas.append(formatted)
+
+    return datas
+
+@st.cache_data
+def process_renegotiations_summary(rows, ft_dpt):
+    datas = defaultdict(lambda: {'Responder': 0, 'Resolvendo': 0, 'Atrasadas': 0})
+
+    for row in rows:
+        departament = row.get('Departamento')
+        status = row.get('Status')
+
+        if departament is None or status is None:
+            continue
+
+        if not Mappings.filter_departament(departament, ft_dpt):
+            continue
+
+        datas[departament][status] += 1
+
+    return dict(datas)
+
+@st.cache_data
+def process_renegotiations_status_count(rows):
+    status_counts = {}
+
+    for row in rows:
+        status = row.get('Status')
+        if status is None:
+            continue
+
+        status_counts[status] = status_counts.get(status, 0) + 1
+
+    return status_counts
+
+
 def process_tickets_by_employee(datas):
     result = defaultdict(lambda: {
         "solicitações": [],
