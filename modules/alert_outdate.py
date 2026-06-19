@@ -18,5 +18,5 @@ class AlertOutdate:
             elapsed_time = now - last_execution
             minutes_passed = elapsed_time.total_seconds() / 60
 
-            if minutes_passed >= 45:
+            if minutes_passed >= 60:
                 st.warning(f"Coleta do sistema {system} está desatualizada", icon="⚠️")
